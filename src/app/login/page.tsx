@@ -11,19 +11,13 @@ export default function page() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <h2 className="text-4xl font-semibold text-[#203D59] sm:text-5xl">
-              Welcome
-            </h2>
+            <h2 className="text-4xl font-semibold text-[#203D59] sm:text-5xl">Welcome</h2>
             <p>Rare and valuable collectibles awaits you</p>
           </div>
 
           <div className="flex flex-col items-center gap-5 text-center">
-            <button className="w-full px-4 py-3 bg-gray-200 rounded-md">
-              Login with Google
-            </button>
-            <button className="w-full px-4 py-3 bg-gray-200 rounded-md">
-              Login with Github
-            </button>
+            <button className="w-full px-4 py-3 bg-gray-200 rounded-md">Login with Google</button>
+            <button className="w-full px-4 py-3 bg-gray-200 rounded-md">Login with Github</button>
             <p className="text-sm text-gray-500">
               By logging in, you have agreed to MARKILANG
               <strong> Privacy Policy</strong> and
@@ -38,11 +32,7 @@ export default function page() {
       </div>
 
       <div className="hidden items-center relative sm:flex sm:w-2/3 lg:w-full">
-        <Image
-          src={bacgkroundImg}
-          alt="illustration one"
-          className="h-full object-cover"
-        />
+        <Image src={bacgkroundImg} alt="illustration one" className="h-full object-cover" />
         <div className="w-full h-full absolute bg-gradient-to-r from-[#203D59]"></div>
       </div>
     </section>
