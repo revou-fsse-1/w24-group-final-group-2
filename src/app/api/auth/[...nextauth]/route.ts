@@ -2,9 +2,9 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
-import { prisma } from "../../../../libs/db";
+import { prisma } from "@/libs/db";
 
-const hendler = NextAuth({
+const handler = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
@@ -18,4 +18,4 @@ const hendler = NextAuth({
   ],
 });
 
-export { hendler as GET, hendler as POST };
+export { handler as GET, handler as POST };
