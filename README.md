@@ -1,5 +1,7 @@
 # Markilang: Mari Kita Lelang
 
+![banner](md/banner.png)
+
 MARKILANG provides auction services for those wanting to auction small valuables or rare collectibles and provides an online platform for collectors to bid their favourite selections.
 
 ## Team Members
