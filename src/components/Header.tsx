@@ -17,18 +17,24 @@ export default function Header() {
 
   const handleLoginDisplay = () => {
     return status == "loading" ? (
-      <div>...</div>
+      <div>.....</div>
     ) : status == "unauthenticated" ? (
       <Link href={"/login"}>
-        <button className="flex gap-2">
-          <IconAvatar size={30} />
-          <span>Login</span>
+        <button className="flex items-center gap-2 text-left">
+          <div className="min-w-fit">
+            <IconAvatar size={30} />
+          </div>
+          <span className="max-w-[110px] line-clamp-2 font-bold">Login</span>
         </button>
       </Link>
     ) : (
-      <button className="flex gap-2">
-        <IconAvatar size={30} />
-        <span>{session?.user?.name}</span>
+      <button className="min-w-fit flex items-center gap-2 text-left">
+        <div className="min-w-fit">
+          <IconAvatar size={30} />
+        </div>
+        <span className="max-w-[110px] line-clamp-2 font-bold">
+          {session?.user?.name}
+        </span>
       </button>
     );
   };
@@ -55,7 +61,7 @@ export default function Header() {
           />
         </div>
 
-        <div className="hidden gap-8 text-lg text-[#203C59] md:flex">
+        <div className="hidden gap-4 text-[#203C59] md:flex lg:gap-8">
           <button>About</button>
           <button>Auctions</button>
           {handleLoginDisplay()}
