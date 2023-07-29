@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import IconWarning from "@/components/icons/IconWarning";
+import MobileNav from "@/components/MobileNav";
 
 export default function Profile() {
   const phoneRegExp =
@@ -132,6 +133,7 @@ export default function Profile() {
         </form>
       </div>
 
+      <MobileNav />
       <Footer />
     </div>
   );
