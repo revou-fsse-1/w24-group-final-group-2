@@ -72,7 +72,7 @@ export default function Login() {
           alt="illustration one"
           className="h-full object-cover"
         />
-        <div className="w-full h-full absolute bg-gradient-to-r from-[#203D59]"></div>
+        <div className="w-full h-full absolute bg-gradient-to-r from-[#203D59] -translate-x-[1px]"></div>
       </div>
     </section>
   );

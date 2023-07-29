@@ -5,7 +5,7 @@ import LogoYellow from "./logo/LogoYellow";
 
 export default function Footer() {
   return (
-    <div className="w-full flex flex-col items-center px-6 py-6 bg-[#203C59]">
+    <div className="w-full flex flex-col items-center px-6 pt-6 pb-32 bg-[#203C59] md:pb-6">
       <footer className="w-full max-w-7xl flex flex-col items-center justify-between gap-5 text-[#EAC066] md:flex-row">
         <div className="flex flex-col items-center gap-3">
           <LogoYellow size={120} />
