@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { indonesianCurrency } from "@/utils/Currency";
 import Image from "next/image";
 
