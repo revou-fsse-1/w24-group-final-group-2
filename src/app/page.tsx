@@ -10,6 +10,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 // back end import related
 import { prisma } from '@/libs/db';
 import IconDoubleRight from '@/components/icons/IconDoubleRight';
+import MobileNav from '@/components/MobileNav';
 
 // server side data fetching
 async function getAllAssets(take: number) {
@@ -33,9 +34,9 @@ export default async function Home() {
 		<>
 			<Header />
 			<main className="flex flex-col justify-center w-full">
-				<section className="flex items-center justify-center w-full h-screen home-background bg-no-repeat bg-cover -mt-[100px]">
-					<div className="container">
-						<div className="w-1/2 ">
+				<section className="flex items-center justify-center w-full h-screen bg-no-repeat bg-cover home-background ">
+					<div className="container mx-5 md:mx-0">
+						<div className="w-full lg:w-1/2 -mt-[150px]">
 							<h1 className="text-mkl-primary">WELCOME TO MARKILANG</h1>
 							<h2 className="mt-2 font-normal text-mkl-neutral">
 								Your Gateway to the World of Collectibles!
@@ -49,14 +50,18 @@ export default async function Home() {
 								for discovering hidden treasures without breaking the bank.
 							</p>
 							<div className="mt-8">
-								<button className="btn-primary">Start Auction</button>
-								<button className="ml-10 btn-secondary">Explore Auction</button>
+								<button className="w-full md:w-fit btn-primary">
+									Start Auction
+								</button>
+								<button className="w-full mt-5 md:w-fit md:ml-10 btn-secondary">
+									Explore Auction
+								</button>
 							</div>
 						</div>
 					</div>
 				</section>
 				<section className="flex justify-center w-full">
-					<div className="container flex flex-col my-28">
+					<div className="container flex flex-col mx-5 md:mx-0 my-28">
 						<div>
 							<h2 className="text-mkl-secondary">Auction Available</h2>
 							<hr className="mt-2 border-2 w-44 bg-mkl-primary border-mkl-primary" />
@@ -69,14 +74,26 @@ export default async function Home() {
 									<IconDoubleRight size={60} />
 								</span>
 							</div>
-							<div className="flex justify-between">
+							<div className="flex flex-col items-center gap-20 md:flex-row md:justify-between">
 								{assets.map((asset) => {
 									return (
-										<ItemCard
-											key={asset.id}
-											name={asset.name}
-											endDate={asset.endTime}
-										/>
+										<>
+											<ItemCard
+												key={asset.id}
+												name={asset.name}
+												endDate={asset.endTime}
+											/>
+											<ItemCard
+												key={asset.id}
+												name={asset.name}
+												endDate={asset.endTime}
+											/>
+											<ItemCard
+												key={asset.id}
+												name={asset.name}
+												endDate={asset.endTime}
+											/>
+										</>
 									);
 								})}
 							</div>
