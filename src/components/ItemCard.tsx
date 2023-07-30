@@ -1,10 +1,12 @@
 'use client';
+import { redirect } from 'next/navigation';
 import { useState, useEffect } from 'react';
 interface IItemCard {
+	id: string;
 	name: string;
 	endDate: Date | null;
 }
-export default function ItemCard({ name, endDate }: IItemCard) {
+export default function ItemCard({ id, name, endDate }: IItemCard) {
 	// const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 	// useEffect(() => {
 	// 	const timer = setInterval(() => {
@@ -30,18 +32,22 @@ export default function ItemCard({ name, endDate }: IItemCard) {
 	const replacement = new Date();
 
 	return (
-		<div>
-			<img
-				src="/assets/dummy-image.png"
-				alt="dummy-image"
-				className=" w-[325px] h-[325px]"
-			/>
+		<div className="transition-all duration-500 hover:scale-110">
+			<a href={`/auctions/${id}`}>
+				<img
+					src="/assets/dummy-image.png"
+					alt="dummy-image"
+					className=" aspect-square"
+				/>
+			</a>
 			<h3 className="mt-8 text-mkl-secondary">{name}</h3>
 			<p className="mt-3 max-w-[325px] text-mkl-secondary">
 				<b>Expired: </b>
 				{`${replacement}`}
 			</p>
-			<button className=" mt-7 w-full max-w-[325px] btn-primary">Bid</button>
+			<a href={`/auctions/${id}`}>
+				<button className=" mt-7 w-full max-w-[325px] btn-primary">Bid</button>
+			</a>
 		</div>
 	);
 }

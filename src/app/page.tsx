@@ -80,16 +80,19 @@ export default async function Home() {
 										<>
 											<ItemCard
 												key={asset.id}
+												id={asset.id}
 												name={asset.name}
 												endDate={asset.endTime}
 											/>
 											<ItemCard
 												key={asset.id}
+												id={asset.id}
 												name={asset.name}
 												endDate={asset.endTime}
 											/>
 											<ItemCard
 												key={asset.id}
+												id={asset.id}
 												name={asset.name}
 												endDate={asset.endTime}
 											/>
