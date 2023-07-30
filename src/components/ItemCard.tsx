@@ -44,6 +44,7 @@ export default function ItemCard({ id, name, endDate }: IItemCard) {
 			<p className="mt-3 max-w-[325px] text-mkl-secondary">
 				<b>Expired: </b>
 				{`${replacement}`}
+				{/* {timeLeft.days>1?(<b>Expired:{`${endDate}`}</b>):(<b>Time Left:</b>{`${timeLeft.hours} hour(s),${timeLeft.minutes} minute(s),${timeLeft.seconds} second(s)`})} */}
 			</p>
 			<a href={`/auctions/${id}`}>
 				<button className=" mt-7 w-full max-w-[325px] btn-primary">Bid</button>

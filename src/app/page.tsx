@@ -10,7 +10,6 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 // back end import related
 import { prisma } from '@/libs/db';
 import IconDoubleRight from '@/components/icons/IconDoubleRight';
-import MobileNav from '@/components/MobileNav';
 
 // server side data fetching
 async function getAllAssets(take: number) {
