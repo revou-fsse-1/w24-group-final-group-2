@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 interface IItemCard {
 	name: string;
-	endDate: Date;
+	endDate: Date | null;
 }
 export default function ItemCard({ name, endDate }: IItemCard) {
 	// const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
@@ -37,7 +37,10 @@ export default function ItemCard({ name, endDate }: IItemCard) {
 				className=" w-[325px] h-[325px]"
 			/>
 			<h3 className="mt-8 text-mkl-secondary">{name}</h3>
-			<p className="mt-3 max-w-[325px]">{`${replacement}`}</p>
+			<p className="mt-3 max-w-[325px] text-mkl-secondary">
+				<b>Expired: </b>
+				{`${replacement}`}
+			</p>
 			<button className=" mt-7 w-full max-w-[325px] btn-primary">Bid</button>
 		</div>
 	);
