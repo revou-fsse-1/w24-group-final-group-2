@@ -1,14 +1,37 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import LogoBlue from './logo/LogoBlue';
 import IconAvatar from './icons/IconAvatar';
 import Link from 'next/link';
 import IconSearch from './icons/IconSearch';
+import MobileNav from './MobileNav';
+
+interface IWindowSize {
+	width: number;
+	height: number;
+}
 
 export default function Header() {
 	const { data: session, status } = useSession();
 	const [searchInput, setSearchInput] = useState('');
+	const [windowSize, setWindowSize] = useState<IWindowSize>({
+		width: 0,
+		height: 0,
+	});
+
+	useEffect(() => {
+		function handleResize() {
+			setWindowSize({
+				width: window.innerWidth,
+				height: window.innerHeight,
+			});
+		}
+
+		window.addEventListener('resize', handleResize);
+		handleResize();
+		return () => window.removeEventListener('resize', handleResize);
+	}, []);
 
 	const searchAuctionList = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		if (e.key == 'Enter') {
@@ -67,6 +90,7 @@ export default function Header() {
 					<button>Auctions</button>
 					{handleLoginDisplay()}
 				</div>
+				{windowSize.width < 768 ? <MobileNav /> : null}
 			</header>
 		</div>
 	);
