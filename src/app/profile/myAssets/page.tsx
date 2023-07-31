@@ -7,17 +7,17 @@ const sampleData = [
     id: "1",
     imageUrl: "https://picsum.photos/300",
     assetName: "Asset Name 1",
-    endTime: new Date().toLocaleString(),
+    endTime: new Date("August 1, 2023 17:03:00").toISOString(),
     startingPrice: 1380000,
-    currentPrice: 3500000,
+    currentPrice: 3600000,
   },
   {
     id: "2",
-    imageUrl: "https://picsum.photos/300",
+    imageUrl: "https://picsum.photos/400",
     assetName: "Asset Name 2",
-    endTime: new Date().toLocaleString(),
-    startingPrice: 1380000,
-    currentPrice: 3500000,
+    endTime: new Date("August 1, 2023 14:03:00").toISOString(),
+    startingPrice: 1250000,
+    currentPrice: 4220000,
   },
 ];
 
@@ -30,6 +30,7 @@ export default function MyAssets() {
       {sampleData.map((data) => (
         <MyAssetCard
           key={data.id}
+          id={data.id}
           imageUrl={data.imageUrl}
           assetName={data.assetName}
           endTime={data.endTime}
