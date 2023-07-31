@@ -39,8 +39,8 @@ export default async function Home() {
 				<section className="flex items-center justify-center w-full h-screen bg-no-repeat bg-cover home-background ">
 					<div className="container mx-5 md:mx-0">
 						<div className="w-full lg:w-1/2 -mt-[150px]">
-							<h1 className="text-mkl-primary">WELCOME TO MARKILANG</h1>
-							<h2 className="mt-2 font-normal text-mkl-neutral">
+							<h1 className="h1 text-mkl-primary">WELCOME TO MARKILANG</h1>
+							<h2 className="mt-2 font-normal h2 text-mkl-neutral">
 								Your Gateway to the World of Collectibles!
 							</h2>
 							<p className="mt-8 text-mkl-neutral">
@@ -65,7 +65,7 @@ export default async function Home() {
 				<section className="flex justify-center w-full">
 					<div className="container flex flex-col mx-5 md:mx-0 my-28">
 						<div>
-							<h2 className="text-mkl-secondary">Auction Available</h2>
+							<h2 className="text-mkl-secondary h2">Auction Available</h2>
 							<hr className="mt-2 border-2 w-44 bg-mkl-primary border-mkl-primary" />
 							<hr className="mt-3 border-2 w-36 bg-mkl-primary border-mkl-primary" />
 						</div>

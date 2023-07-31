@@ -52,7 +52,7 @@ export default function ItemCard({
 					className=" aspect-square max-w-[325px] aspect-square overflow-hidden"
 				/>
 			</a>
-			<h3 className="mt-8 max-w-[325px]">{name}</h3>
+			<h3 className="h3 mt-8 max-w-[325px]">{name}</h3>
 			<p className="mt-3">
 				<small>
 					Start: {indonesianCurrency.format(price)}
