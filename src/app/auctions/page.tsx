@@ -59,7 +59,7 @@ export default function AuctionList() {
 						<hr className="mt-2 border-2 w-44 bg-mkl-primary border-mkl-primary" />
 						<hr className="mt-3 border-2 w-36 bg-mkl-primary border-mkl-primary" />
 					</div>
-					<div className="grid justify-center w-full mt-9 md:grid-cols-3 gap-x-5 gap-y-7">
+					<div className="grid justify-center w-full mt-9 md:grid-cols-3 lg:gap-x-10 gap-x-5 gap-y-7">
 						{assets.map((asset) => (
 							<>
 								<ItemCard
