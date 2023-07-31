@@ -99,15 +99,16 @@ export default function Header() {
 
         <div className="hidden text-[#203C59] md:flex md:flex-col md:relative">
           <div className="flex gap-4 lg:gap-8">
-            <button>About</button>
-            <button>Auctions</button>
+            <Link href={"/auctions"}>
+              <button>Auctions</button>
+            </Link>
             {handleLoginDisplay()}
           </div>
 
           {!displayDropdownMenu ? (
             ""
           ) : (
-            <div className="absolute w-full top-16 flex flex-col text-lg text-right font-bold border-t-2 border-[#203C59] bg-[#CFD4CB]">
+            <div className="absolute w-56 top-16 right-0 flex flex-col text-lg text-right font-bold z-50 border-t-2 border-[#203C59] bg-[#CFD4CB]">
               <Link
                 href={"/profile"}
                 onClick={() => setDisplayDropdownMenu(false)}

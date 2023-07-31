@@ -145,7 +145,7 @@ export default function MobileNav() {
             <span>Search</span>
           </div>
           <Link
-            href={"/auctionList"}
+            href={"/auctions"}
             className="w-1/5 min-w-fit flex flex-col items-center justify-center gap-2 p-3 text-xs hover:bg-[#B2BAAB]"
           >
             <IconAuction size={35} />
