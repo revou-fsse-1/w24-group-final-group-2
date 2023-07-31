@@ -5,7 +5,6 @@ import { NextResponse } from 'next/server';
 import { url } from 'inspector';
 
 export async function GET(req: NextRequest) {
-	console.log('start test', req.nextUrl.searchParams.get('page'), 'end');
 	const page = req.nextUrl.searchParams.get('page');
 	const limit = req.nextUrl.searchParams.get('limit');
 	const search = req.nextUrl.searchParams.get('search');
