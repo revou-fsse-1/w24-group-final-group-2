@@ -73,22 +73,10 @@ export default async function Home() {
 									<IconDoubleRight size={60} />
 								</span>
 							</div>
-							<div className="flex flex-col items-center gap-20 md:flex-row md:justify-between">
+							<div className="flex flex-col items-center gap-20 md:gap-0 md:flex-row md:justify-between">
 								{assets.map((asset) => {
 									return (
 										<>
-											<ItemCard
-												key={asset.id}
-												id={asset.id}
-												name={asset.name}
-												endDate={asset.endTime}
-											/>
-											<ItemCard
-												key={asset.id}
-												id={asset.id}
-												name={asset.name}
-												endDate={asset.endTime}
-											/>
 											<ItemCard
 												key={asset.id}
 												id={asset.id}
