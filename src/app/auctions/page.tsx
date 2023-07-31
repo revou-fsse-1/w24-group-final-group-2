@@ -50,7 +50,7 @@ export default function AuctionList() {
 			<main className="flex flex-col items-center justify-center w-full">
 				<section className="container flex flex-col mx-5 md:mx-0">
 					<div className="mt-10 ml-10 md:ml-0">
-						<h2 className="text-mkl-secondary">
+						<h2 className="h2 text-mkl-secondary">
 							{search ? `Search result of ${search}` : `Auction List`}
 						</h2>
 						<hr className="mt-2 border-2 w-44 bg-mkl-primary border-mkl-primary" />
