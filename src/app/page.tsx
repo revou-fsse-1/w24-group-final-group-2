@@ -13,7 +13,10 @@ import IconDoubleRight from '@/components/icons/IconDoubleRight';
 
 // server side data fetching
 async function getAllAssets(take: number) {
-	const assets = await prisma.asset.findMany({ take: take });
+	const assets = await prisma.asset.findMany({
+		include: { bidAssets: true },
+		take: take,
+	});
 	return { assets };
 }
 
@@ -84,6 +87,8 @@ export default async function Home() {
 												id={asset.id}
 												name={asset.name}
 												imageUrl={asset.imageUrl}
+												price={asset.openingPrice}
+												// highesbids={asset.bidAssets[0].currentPrice}
 												endDate={asset.endTime}
 											/>
 										</>
