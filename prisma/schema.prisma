@@ -41,6 +41,11 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+enum StatusPaid {
+  unpaid
+  paid
+}
+
 model User {
   id            String     @id @default(cuid())
   username      String?    @unique
@@ -89,11 +94,12 @@ model BidAsset {
 }
 
 model Transaction {
-  id        String   @id @default(cuid())
-  assetId   String
-  bidderId  String
-  bidder    BidAsset @relation(fields: [bidderId], references: [id])
-  assets    Asset    @relation(fields: [assetId], references: [id])
-  price     Int
-  createdAt DateTime @default(now())
+  id         String     @id @default(cuid())
+  assetId    String
+  bidderId   String
+  bidder     BidAsset   @relation(fields: [bidderId], references: [id])
+  assets     Asset      @relation(fields: [assetId], references: [id])
+  price      Int
+  statusPaid StatusPaid @default(unpaid)
+  createdAt  DateTime   @default(now())
 }
