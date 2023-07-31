@@ -68,12 +68,14 @@ export default async function Home() {
 						</div>
 						<div className="">
 							<div className="inline-flex items-center justify-end w-full mb-5">
-								<p>VIEW ALL</p>
-								<span className="-ml-1">
-									<IconDoubleRight size={60} />
-								</span>
+								<a href="/auctions" className="inline-flex items-center">
+									<p>VIEW ALL</p>
+									<span className="-ml-1">
+										<IconDoubleRight size={60} />
+									</span>
+								</a>
 							</div>
-							<div className="flex flex-col items-center gap-20 md:gap-0 md:flex-row md:justify-between">
+							<div className="flex flex-col items-start gap-20 md:gap-0 md:flex-row md:justify-between">
 								{assets.map((asset) => {
 									return (
 										<>
@@ -81,6 +83,7 @@ export default async function Home() {
 												key={asset.id}
 												id={asset.id}
 												name={asset.name}
+												imageUrl={asset.imageUrl}
 												endDate={asset.endTime}
 											/>
 										</>

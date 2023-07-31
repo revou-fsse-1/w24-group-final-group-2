@@ -4,50 +4,54 @@ import { useState, useEffect } from 'react';
 interface IItemCard {
 	id: string;
 	name: string;
-	endDate: Date | null;
+	imageUrl: string;
+	endDate: Date;
 }
-export default function ItemCard({ id, name, endDate }: IItemCard) {
-	// const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
-	// useEffect(() => {
-	// 	const timer = setInterval(() => {
-	// 		setTimeLeft(calculateTimeLeft());
-	// 	}, 1000);
-	// 	return () => {
-	// 		clearInterval(timer);
-	// 	};
-	// });
+export default function ItemCard({ id, name, imageUrl, endDate }: IItemCard) {
+	const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+	useEffect(() => {
+		const timer = setInterval(() => {
+			setTimeLeft(calculateTimeLeft());
+		}, 1000);
+		return () => {
+			clearInterval(timer);
+		};
+	});
 
-	// function calculateTimeLeft() {
-	// 	const now = new Date();
-	// 	// const diff = endDate.getTime() - now.getTime();
+	function calculateTimeLeft() {
+		const now = new Date();
+		const target = new Date(endDate);
+		const diff = target.getTime() - now.getTime();
 
-	// 	return {
-	// 		days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-	// 		hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-	// 		minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-	// 		seconds: Math.floor((diff % (1000 * 60)) / 1000),
-	// 	};
-	// }
+		return {
+			days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+			hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+			minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+			seconds: Math.floor((diff % (1000 * 60)) / 1000),
+		};
+	}
 
 	const replacement = new Date();
+	console.log(imageUrl, 'test');
 
 	return (
 		<div className="transition-all duration-500 hover:scale-110">
 			<a href={`/auctions/${id}`}>
 				<img
-					src="/assets/dummy-image.png"
+					src={`${imageUrl}`}
 					alt="dummy-image"
-					className=" aspect-square"
+					className=" aspect-square max-w-[325px] aspect-square overflow-hidden"
 				/>
 			</a>
-			<h3 className="mt-8 text-mkl-secondary">{name}</h3>
+			<h3 className="mt-8 max-w-[325px] text-mkl-secondary">{name}</h3>
 			<p className="mt-3 max-w-[325px] text-mkl-secondary">
-				<b>Expired: </b>
-				{`${replacement}`}
-				{/* {timeLeft.days>1?(<b>Expired:{`${endDate}`}</b>):(<b>Time Left:</b>{`${timeLeft.hours} hour(s),${timeLeft.minutes} minute(s),${timeLeft.seconds} second(s)`})} */}
+				<b>Time Left:</b>
+				{`${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`}
 			</p>
 			<a href={`/auctions/${id}`}>
-				<button className=" mt-7 w-full max-w-[325px] btn-primary">Bid</button>
+				<button className=" mt-7 w-full max-w-[325px] btn-primary">
+					View Auction
+				</button>
 			</a>
 		</div>
 	);

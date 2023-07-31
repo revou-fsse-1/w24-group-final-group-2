@@ -46,21 +46,22 @@ export default function AuctionList() {
 			<Header />
 			<main className="flex flex-col items-center justify-center w-full">
 				<section className="container flex flex-col mx-5 md:mx-0">
-					<div className="ml-10 md:ml-0">
+					<div className="mt-10 ml-10 md:ml-0">
 						<h2 className="text-mkl-secondary">
 							{search ? `Search result of ${search}` : `Auction List`}
 						</h2>
 						<hr className="mt-2 border-2 w-44 bg-mkl-primary border-mkl-primary" />
 						<hr className="mt-3 border-2 w-36 bg-mkl-primary border-mkl-primary" />
 					</div>
-					<div className="grid justify-center w-full mt-9 md:grid-cols-3 lg:gap-x-10 gap-x-5 gap-y-7">
+					<div className="grid items-start justify-center w-full mt-9 md:grid-cols-3 lg:gap-x-10 gap-x-5 gap-y-7">
 						{assets.map((asset) => (
 							<>
 								<ItemCard
 									key={asset.id}
-									id={`${asset.id}`}
+									id={asset.id}
 									name={asset.name}
-									endDate={''}
+									imageUrl={asset.imageUrl}
+									endDate={asset.endTime}
 								/>
 							</>
 						))}
