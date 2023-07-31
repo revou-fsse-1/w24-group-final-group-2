@@ -7,7 +7,7 @@ const sampleData = [
     id: "1",
     imageUrl: "https://picsum.photos/300",
     assetName: "Asset Name 1",
-    endTime: new Date().toLocaleString(),
+    endTime: new Date("August 1, 2023 12:03:00").toISOString(),
     bidAmount: 6800000,
     currentPrice: 6800000,
   },
@@ -22,6 +22,7 @@ export default function MyBids() {
       {sampleData.map((data) => (
         <MyBidCard
           key={data.id}
+          id={data.id}
           imageUrl={data.imageUrl}
           assetName={data.assetName}
           endTime={data.endTime}

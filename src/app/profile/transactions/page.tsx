@@ -20,6 +20,7 @@ export default function Transactions() {
       {sampleData.map((data) => (
         <TransactionCard
           key={data.id}
+          id={data.id}
           imageUrl={data.imageUrl}
           assetName={data.assetName}
           currentPrice={data.currentPrice}
