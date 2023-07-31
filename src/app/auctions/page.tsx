@@ -22,15 +22,9 @@ export default function AuctionList() {
 		setLoading(true);
 		try {
 			const res = await axios.get(
-				`https://pokeapi.co/api/v2/ability/?limit=2&offset=${page * 2}`
+				`/api/assets?page=${page}&limit=20${search ? `&search=${search}` : ''}`
 			);
-
-			// const res = await axios.get(
-			// 	`/api/assets?page=${page}&limit=20${search ? `&search=${search}` : ''}`
-			// );
-			// const newAssets: IAsset[] = res.data.assets;
-
-			const newAssets: IAsset[] = res.data.results;
+			const newAssets: IAsset[] = res.data.assets;
 
 			setAssets((prevAssets) => [...prevAssets, ...newAssets]);
 			setPage((prevPage) => prevPage + 1);
