@@ -69,7 +69,7 @@ model Asset {
   name         String
   description  String
   openingPrice Int?
-  endTime      DateTime?
+  endTime      DateTime
   sellerId     String
   seller       User          @relation("sellers", fields: [sellerId], references: [id])
   createdAt    DateTime      @default(now())
