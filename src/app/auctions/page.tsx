@@ -7,8 +7,11 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 
 interface IAsset {
-	id: number;
+	id: string;
 	name: string;
+	imageUrl: string;
+	price: number;
+	// highestBid: number;
 	endDate: Date;
 }
 export default function AuctionList() {
@@ -61,6 +64,8 @@ export default function AuctionList() {
 									id={asset.id}
 									name={asset.name}
 									imageUrl={asset.imageUrl}
+									price={asset.openingPrice}
+									// highesbids={asset.bidAssets[0].currentPrice}
 									endDate={asset.endTime}
 								/>
 							</>
