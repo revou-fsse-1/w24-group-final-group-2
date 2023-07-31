@@ -42,6 +42,7 @@ export default function ItemCard({
 	}
 
 	const replacement = new Date();
+	console.log(imageUrl, 'test');
 
 	return (
 		<div className="text-mkl-secondary">
