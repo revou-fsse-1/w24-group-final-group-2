@@ -44,7 +44,7 @@ export default function ItemCard({
 	const replacement = new Date();
 
 	return (
-		<div className="transition-all duration-500 hover:scale-110 text-mkl-secondary">
+		<div className="text-mkl-secondary">
 			<a href={`/auctions/${id}`}>
 				<img
 					src={`${imageUrl}`}
