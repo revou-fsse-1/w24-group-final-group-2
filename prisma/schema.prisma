@@ -52,9 +52,9 @@ model User {
   image         String
   creditAmount  Int?
   phoneNumber   String?
+  accounts      Account[]
   assets        Asset[]    @relation("sellers")
   bidAssets     BidAsset[] @relation("bidder")
-  accounts      Account[]
   sessions      Session[]
 }
 
@@ -66,10 +66,10 @@ model Asset {
   openingPrice Int?
   endTime      DateTime?
   sellerId     String
-  seller       User          @relation("sellers", fields: [sellerId], references: [id])
   createdAt    DateTime      @default(now())
   updatedAt    DateTime?     @default(now()) @updatedAt
   deletedAt    DateTime?
+  seller       User          @relation("sellers", fields: [sellerId], references: [id])
   bidAssets    BidAsset[]    @relation("bidAsset")
   transactions Transaction[]
 }
@@ -83,17 +83,23 @@ model BidAsset {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   deletedAt    DateTime?
-  asset        Asset?        @relation("bidAsset", fields: [assetId], references: [id])
+  asset        Asset         @relation("bidAsset", fields: [assetId], references: [id])
   bidder       User          @relation("bidder", fields: [userId], references: [id])
   transaction  Transaction[]
 }
 
 model Transaction {
-  id        String   @id @default(cuid())
-  assetId   String
-  bidderId  String
-  bidder    BidAsset @relation(fields: [bidderId], references: [id])
-  assets    Asset    @relation(fields: [assetId], references: [id])
-  price     Int
-  createdAt DateTime @default(now())
+  id         String     @id @default(cuid())
+  assetId    String
+  bidderId   String
+  price      Int
+  createdAt  DateTime   @default(now())
+  statusPaid StatusPaid @default(unpaid)
+  assets     Asset      @relation(fields: [assetId], references: [id])
+  bidder     BidAsset   @relation(fields: [bidderId], references: [id])
+}
+
+enum StatusPaid {
+  unpaid
+  paid
 }
