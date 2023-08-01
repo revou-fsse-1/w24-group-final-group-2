@@ -7,25 +7,6 @@ import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import useSWR from "swr";
 
-const sampleData = [
-  {
-    id: "1",
-    imageUrl: "https://picsum.photos/300",
-    assetName: "Asset Name 1",
-    endTime: new Date("August 1, 2023 17:03:00").toISOString(),
-    startingPrice: 1380000,
-    currentPrice: 3600000,
-  },
-  {
-    id: "2",
-    imageUrl: "https://picsum.photos/400",
-    assetName: "Asset Name 2",
-    endTime: new Date("August 1, 2023 14:03:00").toISOString(),
-    startingPrice: 1250000,
-    currentPrice: 4220000,
-  },
-];
-
 export default function MyAssets() {
   const { data: session, status } = useSession();
 
@@ -44,10 +25,6 @@ export default function MyAssets() {
         throw new Error("Failed fetching data");
       });
   const { data, isLoading } = useSWR("/api/users/assets", fetchData);
-
-  if (!isLoading) {
-    console.log(data);
-  }
 
   const displayMyAssets = () => {
     return data.map((asset: any) => (
@@ -75,17 +52,6 @@ export default function MyAssets() {
       ) : (
         displayMyAssets()
       )}
-      {/* {sampleData.map((data) => (
-        <MyAssetCard
-          key={data.id}
-          id={data.id}
-          imageUrl={data.imageUrl}
-          assetName={data.assetName}
-          endTime={data.endTime}
-          startingPrice={data.startingPrice}
-          currentPrice={data.currentPrice}
-        />
-      ))} */}
     </div>
   );
 }

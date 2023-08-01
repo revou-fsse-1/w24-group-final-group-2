@@ -17,6 +17,8 @@ export default function EditAsset({ params }: { params: { id: string } }) {
   const { data: session, status } = useSession();
   const [disableSubmit, setDisableSubmit] = useState(false);
 
+  const currentDate = new Date().toISOString().split(".")[0];
+
   if (status == "unauthenticated") {
     redirect("/login");
   }
@@ -35,12 +37,6 @@ export default function EditAsset({ params }: { params: { id: string } }) {
     `/api/users/assets/${params.id}`,
     fetchData
   );
-
-  if (!isLoading) {
-    console.log(data);
-  }
-
-  const currentDate = new Date().toISOString().split(".")[0];
 
   // Yup & react hook form setup
   const schema = yup.object({
@@ -210,14 +206,14 @@ export default function EditAsset({ params }: { params: { id: string } }) {
           </div>
 
           <div className="w-full flex flex-col gap-5 md:w-1/2">
-            <div className="w-48 h-48 flex items-center justify-center border">
+            <div className="w-60 h-60 flex items-center justify-center border">
               {!data ? (
                 "..."
               ) : (
                 <Image
                   src={data.imageUrl}
-                  width={300}
-                  height={300}
+                  width={500}
+                  height={500}
                   alt={data.name + " image"}
                 />
               )}
