@@ -2,27 +2,44 @@
 
 import { indonesianCurrency } from "@/utils/Currency";
 import Link from "next/link";
+import LoadingSpinner from "@/components/LoadingSpinner";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import { redirect, useRouter } from "next/navigation";
+import useSWR from "swr";
+import { useState } from "react";
+
+const deliveryCost = 500000;
 
 export default function TransactionCheckout({
   params,
 }: {
   params: { id: string };
 }) {
-  const exampleData = {
-    assetName: "Asset Name 1",
-    userFullName: "John Doe",
-    address:
-      "Jl. LPK Pemuda I, RT.002/RW.012, Buaran Indah, Kec. Tangerang, Kota Tangerang, Banten 15118",
-    phoneNumber: "082112345678",
-    currentPrice: 6800000,
-  };
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
-  const finalBidPrice = exampleData.currentPrice;
-  const serviceCharge = finalBidPrice / 10;
-  const deliveryCost = 500000;
-  const totalCost = finalBidPrice + serviceCharge + deliveryCost;
+  if (status == "unauthenticated") {
+    redirect("/login");
+  }
 
+  // Fetching data
+  const fetchData = (url: string) =>
+    axios
+      .get(url)
+      .then((data) => {
+        return data.data;
+      })
+      .catch((error) => {
+        throw new Error("Failed fetching data");
+      });
+  const user = useSWR(`/api/users/${session?.user?.email}`, fetchData);
+  const bidAsset = useSWR(`/api/users/bids/${params.id}`, fetchData);
+
+  // Handle submit
   const handlePayment = () => {
+    setDisableSubmit(true);
     console.log("Payment Successful");
   };
 
@@ -37,22 +54,38 @@ export default function TransactionCheckout({
           <div className="w-full flex flex-col gap-6 pr-6 pb-6 border-b-2 md:w-1/2 md:pb-0 md:border-b-0 md:border-r-2">
             <div className="flex flex-col gap-1">
               <h2>Asset Name:</h2>
-              <p className="font-bold">{exampleData.assetName}</p>
+              {!bidAsset.data || !user.data ? (
+                <p className="font-bold opacity-40">...</p>
+              ) : (
+                <p className="font-bold">{bidAsset.data.asset.name}</p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
               <h2>Received By:</h2>
-              <p className="font-bold">{exampleData.userFullName}</p>
+              {!bidAsset.data || !user.data ? (
+                <p className="font-bold opacity-40">...</p>
+              ) : (
+                <p className="font-bold">{user.data.name}</p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
               <h2>Deliver To:</h2>
-              <p className="font-bold">{exampleData.address}</p>
+              {!bidAsset.data || !user.data ? (
+                <p className="font-bold opacity-40">...</p>
+              ) : (
+                <p className="font-bold">{user.data.address}</p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1">
               <h2>Phone Number:</h2>
-              <p className="font-bold">{exampleData.phoneNumber}</p>
+              {!bidAsset.data || !user.data ? (
+                <p className="font-bold opacity-40">...</p>
+              ) : (
+                <p className="font-bold">{user.data.phoneNumber}</p>
+              )}
             </div>
           </div>
 
@@ -60,30 +93,50 @@ export default function TransactionCheckout({
             <div className="w-full flex flex-col gap-3">
               <div className="flex flex-col gap-1 md:flex-row md:justify-between">
                 <h2>Final Bid Price:</h2>
-                <p className="font-bold">
-                  {indonesianCurrency.format(finalBidPrice)}
-                </p>
+                {!bidAsset.data || !user.data ? (
+                  <p className="font-bold opacity-40">...</p>
+                ) : (
+                  <p className="font-bold">
+                    {indonesianCurrency.format(bidAsset.data.currentPrice)}
+                  </p>
+                )}
               </div>
               <div className="flex flex-col gap-1 md:flex-row md:justify-between">
                 <h2>Service Charge (10%):</h2>
-                <p className="font-bold">
-                  {indonesianCurrency.format(serviceCharge)}
-                </p>
+                {!bidAsset.data || !user.data ? (
+                  <p className="font-bold opacity-40">...</p>
+                ) : (
+                  <p className="font-bold">
+                    {indonesianCurrency.format(bidAsset.data.currentPrice / 10)}
+                  </p>
+                )}
               </div>
               <div className="flex flex-col gap-1 md:flex-row md:justify-between">
                 <h2>Delivery Cost:</h2>
-                <p className="font-bold">
-                  {indonesianCurrency.format(deliveryCost)}
-                </p>
+                {!bidAsset.data || !user.data ? (
+                  <p className="font-bold opacity-40">...</p>
+                ) : (
+                  <p className="font-bold">
+                    {indonesianCurrency.format(deliveryCost)}
+                  </p>
+                )}
               </div>
             </div>
 
             <div className="w-full flex flex-col">
               <div className="flex flex-col gap-1 md:flex-row md:justify-between">
                 <h2>Total Cost:</h2>
-                <p className="text-2xl font-bold">
-                  {indonesianCurrency.format(totalCost)}
-                </p>
+                {!bidAsset.data || !user.data ? (
+                  <p className="text-2xl font-bold opacity-40">...</p>
+                ) : (
+                  <p className="text-2xl font-bold">
+                    {indonesianCurrency.format(
+                      bidAsset.data.currentPrice +
+                        bidAsset.data.currentPrice / 10 +
+                        deliveryCost
+                    )}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -91,18 +144,35 @@ export default function TransactionCheckout({
       </div>
 
       <div className="w-full flex flex-col-reverse justify-between gap-6 md:flex-row">
-        <Link href={"/profile/transactions"}>
+        <Link href={"/profile/myBids"}>
           <button className="w-fit px-8 py-3 rounded-md text-white bg-[#203C59]">
             Cancel
           </button>
         </Link>
 
-        <button
-          onClick={() => handlePayment()}
-          className="w-fit px-8 py-3 rounded-md bg-[#EAC066]"
-        >
-          Confirm Payment
-        </button>
+        {!user.data || !bidAsset.data ? (
+          <div className="w-1/3 p-3">
+            <LoadingSpinner />
+          </div>
+        ) : (
+          <>
+            {disableSubmit ? (
+              <button
+                disabled
+                className="w-fit px-8 py-3 rounded-md bg-[#EAC066] opacity-40"
+              >
+                Confirm Payment
+              </button>
+            ) : (
+              <button
+                onClick={() => handlePayment()}
+                className="w-fit px-8 py-3 rounded-md bg-[#EAC066]"
+              >
+                Confirm Payment
+              </button>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
