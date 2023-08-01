@@ -6,13 +6,23 @@ import IconHome from './icons/IconHome';
 import IconRegister from './icons/IconRegister';
 import IconSearch from './icons/IconSearch';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import IconDropdown from './icons/IconDropdown';
 
 export default function MobileNav() {
 	const { data: session, status } = useSession();
 	const [toggleSearch, setToggleSearch] = useState(false);
+	const [searchInput, setSearchInput] = useState('');
 	const [displayDropdownMenu, setDisplayDropdownMenu] = useState(false);
+	const router = useRouter();
+
+	const searchAuctionList = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		const targetUrl = `/auctions?page=1&limit=10=&search=${searchInput}`;
+		if (e.key == 'Enter') {
+			router.push(targetUrl);
+		}
+	};
 
 	const displaySearchBar = () =>
 		!toggleSearch ? (
@@ -25,8 +35,8 @@ export default function MobileNav() {
 				<input
 					type="text"
 					placeholder="Search for..."
-					// onChange={(e) => setSearchInput(e.target.value)}
-					// onKeyDown={(e) => searchAuctionList(e)}
+					onChange={(e) => setSearchInput(e.target.value)}
+					onKeyDown={(e) => searchAuctionList(e)}
 					className="w-full py-3 pl-5 pr-12 rounded-full"
 				/>
 			</div>
