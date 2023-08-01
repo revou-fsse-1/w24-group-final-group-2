@@ -23,6 +23,7 @@ export default function AuctionList() {
 
 	async function loadMoreAssets() {
 		setLoading(true);
+		console.log('loadMoreAssets');
 		try {
 			const res = await axios.get(
 				`/api/assets?page=${page}&limit=20${search ? `&search=${search}` : ''}`
@@ -37,9 +38,35 @@ export default function AuctionList() {
 		setLoading(false);
 	}
 
+	async function reloadAssets() {
+		setLoading(true);
+
+		console.log('reloadAssets');
+		try {
+			const res = await axios.get(
+				`/api/assets?page=1&limit=10${search ? `&search=${search}` : ''}`
+			);
+
+			const newAssets: IAsset[] = res.data.assets;
+
+			setAssets((prevAssets) => [...prevAssets, ...newAssets]);
+
+			setPage((prevPage) => prevPage + 1);
+		} catch (error) {
+			console.error('Error fetching data', error);
+		}
+		setLoading(false);
+	}
+
 	useEffect(() => {
 		loadMoreAssets();
 	}, []);
+
+	useEffect(() => {
+		setPage(1);
+		setAssets([]);
+		reloadAssets();
+	}, [search]);
 
 	function handleLoadMore() {
 		loadMoreAssets();
