@@ -10,9 +10,9 @@ interface IAsset {
 	id: string;
 	name: string;
 	imageUrl: string;
-	price: number;
+	openingPrice: number;
 	// highestBid: number;
-	endDate: Date;
+	endTime: Date;
 }
 export default function AuctionList() {
 	const [assets, setAssets] = useState<IAsset[]>([]);
@@ -85,17 +85,15 @@ export default function AuctionList() {
 					</div>
 					<div className="grid items-start justify-center w-full mt-9 md:grid-cols-3 lg:gap-x-10 gap-x-5 gap-y-7">
 						{assets.map((asset) => (
-							<>
-								<ItemCard
-									key={asset.id}
-									id={asset.id}
-									name={asset.name}
-									imageUrl={asset.imageUrl}
-									price={asset.openingPrice}
-									// highesbids={asset.bidAssets[0].currentPrice}
-									endDate={asset.endTime}
-								/>
-							</>
+							<ItemCard
+								key={asset.id}
+								id={asset.id}
+								name={asset.name}
+								imageUrl={asset.imageUrl}
+								price={asset.openingPrice}
+								// highesbids={asset.bidAssets[0].currentPrice}
+								endDate={asset.endTime}
+							/>
 						))}
 					</div>
 					<div className="flex justify-center my-10">
