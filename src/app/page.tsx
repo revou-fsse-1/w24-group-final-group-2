@@ -44,9 +44,9 @@ export default async function Home() {
 								Get ready for an exhilarating experience in the realm of
 								collectibles! At Markilang, we take pride in curating unique
 								auctions that bring together collectors and enthusiasts from all
-								walks of life. Whether you're on the hunt for vintage rarities
-								or quirky memorabilia, our platform is the perfect destination
-								for discovering hidden treasures without breaking the bank.
+								walks of life. Whether you&apos;re on the hunt for vintage rarities
+								or quirky memorabilia, our platform is the perfect destination for
+								discovering hidden treasures without breaking the bank.
 							</p>
 							<div className="mt-8">
 								<button className="w-full md:w-fit btn-primary">
