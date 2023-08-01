@@ -18,6 +18,7 @@ export default function AuctionList() {
 	const [assets, setAssets] = useState<IAsset[]>([]);
 	const [loading, setLoading] = useState(false);
 	const [page, setPage] = useState(1);
+	const [isInitLoad, setInitLoad] = useState(true);
 
 	const search = useSearchParams().get('search');
 
@@ -63,10 +64,13 @@ export default function AuctionList() {
 	}, []);
 
 	useEffect(() => {
-		setPage(1);
-		setAssets([]);
-		reloadAssets();
-	}, [search]);
+		if (isInitLoad) {
+			setInitLoad(false);
+			setPage(1);
+			setAssets([]);
+			reloadAssets();
+		}
+	}, [search, isInitLoad]);
 
 	function handleLoadMore() {
 		loadMoreAssets();
