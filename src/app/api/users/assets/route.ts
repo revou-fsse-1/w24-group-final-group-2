@@ -37,3 +37,26 @@ export async function GET() {
   });
   return NextResponse.json(assetList);
 }
+
+export async function POST(request: Request) {
+  const session = await getServerSession(authOptions);
+  const json = await request.json();
+
+  const currentUser = await prisma.user.findFirst({
+    where: {
+      email: session?.user?.email?.toString(),
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  const createAsset = await prisma.asset.create({
+    data: {
+      ...json,
+      sellerId: currentUser?.id,
+    },
+  });
+
+  return NextResponse.json(createAsset);
+}
