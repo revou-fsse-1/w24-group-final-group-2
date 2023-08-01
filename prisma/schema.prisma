@@ -104,7 +104,4 @@ model Transaction {
   bidder     BidAsset   @relation(fields: [bidderId], references: [id])
 }
 
-enum StatusPaid {
-  unpaid
-  paid
-}
+
