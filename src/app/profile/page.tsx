@@ -73,7 +73,7 @@ export default function Profile() {
   const onSubmit = async (formData: any) => {
     try {
       setDisableSubmit(true);
-      const response = await axios.put(
+      const response = await axios.patch(
         `/api/users/${session?.user?.email}`,
         formData
       );
