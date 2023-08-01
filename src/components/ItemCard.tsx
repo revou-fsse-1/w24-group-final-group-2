@@ -1,5 +1,4 @@
 'use client';
-import { redirect } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { indonesianCurrency } from '@/utils/Currency';
 interface IItemCard {
