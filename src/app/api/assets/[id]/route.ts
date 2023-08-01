@@ -1,14 +1,17 @@
 import { prisma } from '@/libs/db';
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 
 export async function GET(
-	request: Request,
+	request: NextRequest,
 	{ params }: { params: { id: string } }
 ) {
 	const id = params.id;
 	const asset = await prisma.asset.findUnique({
 		where: {
 			id: id,
+		},
+		include: {
+			bidAssets: { include: { bidder: true } },
 		},
 	});
 	return NextResponse.json(asset);
