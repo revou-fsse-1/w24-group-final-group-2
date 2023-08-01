@@ -6,7 +6,8 @@ import Link from "next/link";
 import { useCountdown } from "@/utils/useCountDown";
 
 type MyBidCardProps = {
-  id: string;
+  bidId: string;
+  assetId: string;
   imageUrl: string;
   assetName: string;
   endTime: string;
@@ -15,7 +16,8 @@ type MyBidCardProps = {
 };
 
 export default function MyBidCard({
-  id,
+  bidId,
+  assetId,
   imageUrl,
   assetName,
   endTime,
@@ -66,7 +68,7 @@ export default function MyBidCard({
       <div className="flex flex-col gap-3 py-6 border-b-2 border-[#222E3F] border-opacity-40 md:flex-row md:items-center md:gap-7">
         <div className="w-1/6 min-w-fit">
           <Link
-            href={`/auctions/${id}`}
+            href={`/auctions/${assetId}`}
             className="w-48 h-48 flex items-center justify-center border"
           >
             <Image
@@ -80,7 +82,7 @@ export default function MyBidCard({
 
         <div className="w-5/6 flex flex-col gap-5 justify-between md:flex-row">
           <div className="flex flex-col gap-5 justify-between md:gap-7">
-            <Link href={`/auctions/${id}`}>
+            <Link href={`/auctions/${assetId}`}>
               <span className="text-2xl font-bold text-[#203C59] md:text-3xl">
                 {assetName}
               </span>
@@ -100,13 +102,13 @@ export default function MyBidCard({
           </div>
 
           <div className="flex flex-col gap-5">
-            <Link href={`/auctions/${id}`}>
+            <Link href={`/auctions/${assetId}`}>
               <button className="w-fit px-5 py-3 rounded-md text-white bg-[#203C59]">
                 View Asset
               </button>
             </Link>
-            {timeRemaining <= 0 ? (
-              <Link href={`/profile/transactions/checkout/${id}`}>
+            {timeRemaining > 0 ? (
+              <Link href={`/profile/transactions/checkout/${bidId}`}>
                 <button className="w-fit px-5 py-3 rounded-md bg-[#EAC066]">
                   Proceed to Checkout
                 </button>

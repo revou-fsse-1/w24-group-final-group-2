@@ -30,7 +30,8 @@ export default function MyBids() {
     return data.map((bids: any) => (
       <MyBidCard
         key={bids.id}
-        id={bids.asset.id}
+        bidId={bids.id}
+        assetId={bids.asset.id}
         imageUrl={bids.asset.imageUrl}
         assetName={bids.asset.name}
         endTime={bids.asset.endTime}
