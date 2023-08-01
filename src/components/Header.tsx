@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import LogoBlue from './logo/LogoBlue';
 import IconAvatar from './icons/IconAvatar';
@@ -21,6 +22,7 @@ export default function Header() {
 		width: 0,
 		height: 0,
 	});
+	const router = useRouter();
 
 	useEffect(() => {
 		function handleResize() {
@@ -36,8 +38,9 @@ export default function Header() {
 	}, []);
 
 	const searchAuctionList = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		const targetUrl = `/auctions?page=1&limit=10=&search=${searchInput}`;
 		if (e.key == 'Enter') {
-			console.log(searchInput);
+			router.push(targetUrl);
 		}
 	};
 
