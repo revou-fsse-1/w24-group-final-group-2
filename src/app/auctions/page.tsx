@@ -30,7 +30,6 @@ export default function AuctionList() {
 				`/api/assets?page=${page}&limit=20${search ? `&search=${search}` : ''}`
 			);
 			const newAssets: IAsset[] = res.data.assets;
-
 			setAssets((prevAssets) => [...prevAssets, ...newAssets]);
 			setPage((prevPage) => prevPage + 1);
 		} catch (error) {
@@ -41,17 +40,13 @@ export default function AuctionList() {
 
 	async function reloadAssets() {
 		setLoading(true);
-
-		console.log('reloadAssets');
 		try {
 			const res = await axios.get(
 				`/api/assets?page=1&limit=10${search ? `&search=${search}` : ''}`
 			);
 
 			const newAssets: IAsset[] = res.data.assets;
-
 			setAssets((prevAssets) => [...prevAssets, ...newAssets]);
-
 			setPage((prevPage) => prevPage + 1);
 		} catch (error) {
 			console.error('Error fetching data', error);
@@ -65,7 +60,8 @@ export default function AuctionList() {
 
 	useEffect(() => {
 		if (isInitLoad) {
-			setInitLoad(false);
+			return setInitLoad(false);
+		} else {
 			setPage(1);
 			setAssets([]);
 			reloadAssets();
