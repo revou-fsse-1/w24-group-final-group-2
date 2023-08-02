@@ -17,89 +17,77 @@ interface IAsset {
 }
 export default function AuctionList() {
 	const [assets, setAssets] = useState<IAsset[]>([]);
-	// const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const [page, setPage] = useState(1);
-	// const [isInitLoad, setInitLoad] = useState(true);
+	const [isInitLoad, setInitLoad] = useState(true);
 
 	const search = useSearchParams().get('search');
 
-	// async function loadMoreAssets() {
-	// 	setLoading(true);
-	// 	console.log('loadMoreAssets');
-	// 	try {
-	// 		const res = await axios.get(
-	// 			`/api/assets?page=${page}&limit=20${search ? `&search=${search}` : ''}`
-	// 		);
-	// 		const newAssets: IAsset[] = res.data.assets;
-	// 		setAssets((prevAssets) => [...prevAssets, ...newAssets]);
-	// 		setPage((prevPage) => prevPage + 1);
-	// 	} catch (error) {
-	// 		console.error('Error fetching data', error);
-	// 	}
-	// 	setLoading(false);
+	// Fetching data
+	// const fetcher = (url: string) =>
+	//   axios
+	//     .get(url)
+	//     .then((data) => {
+	//       return data.data;
+	//     })
+	//     .catch((error) => {
+	//       throw new Error("Failed fetching data");
+	//     });
+	// const { data, isLoading } = useSWR(
+	//   `/api/assets?page=${page}&limit=10${search ? `&search=${search}` : ""}`,
+	//   fetcher
+	// );
+
+	// if (isLoading) {
+	//   console.log("Loading...");
 	// }
 
-	// async function reloadAssets() {
-	// 	setLoading(true);
-	// 	setPage(1);
-	// 	setAssets([]);
-	// 	try {
-	// 		const res = await axios.get(
-	// 			`/api/assets?page=${page}&limit=10${search ? `&search=${search}` : ''}`
-	// 		);
-
-	// 		const newAssets: IAsset[] = res.data.assets;
-	// 		setAssets((prevAssets) => [...prevAssets, ...newAssets]);
-	// 		setPage((prevPage) => prevPage + 1);
-	// 	} catch (error) {
-	// 		console.error('Error fetching data', error);
-	// 	}
-	// 	setLoading(false);
+	// if (!isLoading) {
+	//   console.log(data);
 	// }
 
-	// useEffect(() => {
-	// 	loadMoreAssets();
-	// }, []);
-
-	// useEffect(() => {
-	// 	reloadAssets();
-	// }, [search]);
-
-	// function handleLoadMore() {
-	// 	loadMoreAssets();
-	// }
-
-	async function fetcher(url: string) {
+	async function loadMoreAssets() {
+		setLoading(true);
+		console.log('loadMoreAssets');
 		try {
-			const res = await axios.get(url);
-			return res.data;
+			const res = await axios.get(
+				`/api/assets?page=${page}&limit=20${search ? `&search=${search}` : ''}`
+			);
+
+			console.log(res.data.assets);
+			const newAssets: IAsset[] = res.data.assets;
+			setAssets((prevAssets) => [...prevAssets, ...newAssets]);
+			setPage((prevPage) => prevPage + 1);
 		} catch (error) {
-			throw new Error('error fetching data');
+			console.error('Error fetching data', error);
 		}
+		setLoading(false);
 	}
 
-	const targetURL = `/api/assets?page=${page}&limit=10${
-		search ? `&search=${search}` : ''
-	}`;
-	const { data, isLoading, mutate } = useSWR(targetURL, fetcher);
+	async function reloadAssets() {
+		setLoading(true);
+		try {
+			const res = await axios.get(
+				`/api/assets?page=1&limit=10${search ? `&search=${search}` : ''}`
+			);
 
-	function loadMoreAssets() {
-		console.log('loaded more');
-		mutate();
-		const newAssets: IAsset[] = data.assets;
-		setAssets((prevAssets) => [...prevAssets, ...newAssets]);
-		setPage((prevPage) => prevPage + 1);
+			console.log(res.data.assets);
+
+			const newAssets: IAsset[] = res.data.assets;
+			setAssets((prevAssets) => [...prevAssets, ...newAssets]);
+			setPage((prevPage) => prevPage + 1);
+		} catch (error) {
+			console.error('Error fetching data', error);
+		}
+		setLoading(false);
 	}
 
-	function reloadAssets() {
-		setPage(1);
-		setAssets([]);
-		mutate();
-		console.log('reloaded');
-		console.log('data:', data);
-		const newAssets: IAsset[] = data.assets;
-		setAssets(data.assets);
-		setPage((prevPage) => prevPage + 1);
+	useEffect(() => {
+		loadMoreAssets();
+	}, []);
+
+	function handleLoadMore() {
+		loadMoreAssets();
 	}
 
 	return (
@@ -114,7 +102,8 @@ export default function AuctionList() {
 						<hr className="mt-2 border-2 w-44 bg-mkl-primary border-mkl-primary" />
 						<hr className="mt-3 border-2 w-36 bg-mkl-primary border-mkl-primary" />
 					</div>
-					<div className="grid items-start justify-center w-full mt-9 md:grid-cols-3 lg:gap-x-10 gap-x-5 gap-y-7">
+
+					<div className="grid items-start justify-center w-full mt-9 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-10 gap-x-5 gap-y-7">
 						{assets.map((asset) => (
 							<ItemCard
 								key={asset.id}
@@ -122,18 +111,19 @@ export default function AuctionList() {
 								name={asset.name}
 								imageUrl={asset.imageUrl}
 								price={asset.openingPrice}
-								// highesbids={asset.bidAssets[0].currentPrice}
-								endDate={asset.endTime}
+								highestBid={asset.openingPrice}
+								endDate={String(asset.endTime)}
 							/>
 						))}
 					</div>
+
 					<div className="flex justify-center my-10">
-						{isLoading ? (
+						{loading ? (
 							<p>Loading ...</p>
 						) : (
 							<button
-								onClick={loadMoreAssets}
-								disabled={isLoading}
+								onClick={() => handleLoadMore()}
+								disabled={loading}
 								className="btn-secondary"
 							>
 								Load More
@@ -143,7 +133,6 @@ export default function AuctionList() {
 				</section>
 			</main>
 			<Footer />
-			<span className="mb-20" />
 		</>
 	);
 }
