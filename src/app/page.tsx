@@ -91,11 +91,17 @@ export default async function Home() {
                         id={asset.id}
                         name={asset.name}
                         imageUrl={asset.imageUrl}
-                        price={asset.openingPrice}
+                        price={
+                          asset.openingPrice !== null ? asset.openingPrice : 0
+                        }
                         highestBid={
                           !asset.bidAssets[0] ? 0 : asset.bidAssets[0].bidAmount
                         }
-                        endDate={asset.endTime?.toISOString()}
+                        endDate={
+                          asset.endTime !== null
+                            ? asset.endTime.toISOString()
+                            : new Date().toISOString()
+                        }
                       />
                     </>
                   );
