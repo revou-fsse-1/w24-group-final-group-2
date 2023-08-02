@@ -5,9 +5,9 @@ interface IItemCard {
 	id: string;
 	name: string;
 	imageUrl: string;
-	price: number;
+	price: number | any;
 	// highestBid: number;
-	endDate: Date;
+	endDate: Date | any;
 }
 export default function ItemCard({
 	id,
@@ -48,7 +48,7 @@ export default function ItemCard({
 				<img
 					src={`${imageUrl}`}
 					alt="dummy-image"
-					className=" aspect-square max-w-[325px] aspect-square overflow-hidden"
+					className=" max-w-[325px] aspect-square overflow-hidden"
 				/>
 			</a>
 			<h3 className="h3 mt-8 max-w-[325px]">{name}</h3>
@@ -64,9 +64,7 @@ export default function ItemCard({
 				{`${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`}
 			</p>
 			<a href={`/auctions/${id}`}>
-				<button className=" mt-7 w-full max-w-[325px] btn-primary">
-					View Auction
-				</button>
+				<button className=" mt-7 w-full max-w-[325px] btn-primary">View Auction</button>
 			</a>
 		</div>
 	);
