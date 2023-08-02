@@ -26,18 +26,37 @@ export default function MyAssets() {
       });
   const { data, isLoading } = useSWR("/api/users/assets", fetchData);
 
+  if (!isLoading) {
+    console.log(data);
+  }
+
   const displayMyAssets = () => {
-    return data.map((asset: any) => (
-      <MyAssetCard
-        key={asset.id}
-        id={asset.id}
-        imageUrl={asset.imageUrl}
-        assetName={asset.name}
-        endTime={asset.endTime}
-        startingPrice={asset.openingPrice}
-        currentPrice={!asset.bidAssets[0] ? 0 : asset.bidAssets[0].currentPrice}
-      />
-    ));
+    if (data.length == 0) {
+      return (
+        <div className="w-full flex flex-col gap-7">
+          <div className="flex flex-col items-center gap-5 p-6 bg-gray-100">
+            <span className="text-2xl font-bold">
+              {"You haven't registered any Assets"}
+            </span>
+            <span>Display your assets in the auctions by registering them</span>
+          </div>
+        </div>
+      );
+    } else {
+      return data.map((asset: any) => (
+        <MyAssetCard
+          key={asset.id}
+          id={asset.id}
+          imageUrl={asset.imageUrl}
+          assetName={asset.name}
+          endTime={asset.endTime}
+          startingPrice={asset.openingPrice}
+          currentPrice={
+            !asset.bidAssets[0] ? 0 : asset.bidAssets[0].currentPrice
+          }
+        />
+      ));
+    }
   };
 
   return (

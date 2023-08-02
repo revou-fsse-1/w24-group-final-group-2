@@ -26,15 +26,34 @@ export default function Transactions() {
       });
   const { data, isLoading } = useSWR("/api/users/transactions", fetchData);
 
+  if (!isLoading) {
+    console.log(data);
+  }
+
   const displayMyTransactions = () => {
-    return data.map((transaction: any) => (
-      <TransactionCard
-        key={transaction.id}
-        imageUrl={transaction.assets.imageUrl}
-        assetName={transaction.assets.name}
-        currentPrice={transaction.bidder.currentPrice}
-      />
-    ));
+    if (data.length == 0) {
+      return (
+        <div className="w-full flex flex-col gap-7">
+          <div className="flex flex-col items-center gap-5 p-6 bg-gray-100">
+            <span className="text-2xl font-bold">
+              {"No transactions to be found"}
+            </span>
+            <span>
+              Transactions will appear here after successful payment of assets
+            </span>
+          </div>
+        </div>
+      );
+    } else {
+      return data.map((transaction: any) => (
+        <TransactionCard
+          key={transaction.id}
+          imageUrl={transaction.assets.imageUrl}
+          assetName={transaction.assets.name}
+          currentPrice={transaction.bidder.currentPrice}
+        />
+      ));
+    }
   };
 
   return (
