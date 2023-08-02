@@ -26,19 +26,36 @@ export default function MyBids() {
       });
   const { data, isLoading } = useSWR("/api/users/bids/", fetchData);
 
+  if (!isLoading) {
+    console.log(data);
+  }
+
   const displayMyBids = () => {
-    return data.map((bids: any) => (
-      <MyBidCard
-        key={bids.id}
-        bidId={bids.id}
-        assetId={bids.asset.id}
-        imageUrl={bids.asset.imageUrl}
-        assetName={bids.asset.name}
-        endTime={bids.asset.endTime}
-        bidAmount={bids.bidAmount}
-        currentPrice={bids.currentPrice}
-      />
-    ));
+    if (data.length == 0) {
+      return (
+        <div className="w-full flex flex-col gap-7">
+          <div className="flex flex-col items-center gap-5 p-6 bg-gray-100">
+            <span className="text-2xl font-bold">
+              {"You haven't made any bids"}
+            </span>
+            <span>Start bidding by searching through the auctions</span>
+          </div>
+        </div>
+      );
+    } else {
+      return data.map((bids: any) => (
+        <MyBidCard
+          key={bids.id}
+          bidId={bids.id}
+          assetId={bids.asset.id}
+          imageUrl={bids.asset.imageUrl}
+          assetName={bids.asset.name}
+          endTime={bids.asset.endTime}
+          bidAmount={bids.bidAmount}
+          currentPrice={bids.currentPrice}
+        />
+      ));
+    }
   };
 
   return (
