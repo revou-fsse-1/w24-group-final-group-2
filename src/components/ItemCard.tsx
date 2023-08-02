@@ -3,6 +3,7 @@ import { indonesianCurrency } from "@/utils/Currency";
 import { useCountdown } from "@/utils/useCountDown";
 import Link from "next/link";
 import Image from "next/image";
+
 interface IItemCard {
   id: string;
   name: string;
@@ -11,6 +12,7 @@ interface IItemCard {
   highestBid: number;
   endDate: string;
 }
+
 export default function ItemCard({
   id,
   name,

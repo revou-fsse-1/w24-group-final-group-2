@@ -14,34 +14,44 @@ export async function GET(req: NextRequest) {
 
 	const pageNumber = parseInt(page as string);
 	const perPageNumber = parseInt(limit as string);
-	try {
-		const whereClause = {
-			OR: [
-				{
-					name: {
-						contains: search,
-						mode: 'insensitive',
-					},
-				},
-				{
-					description: {
-						contains: search,
-						mode: 'insensitive',
-					},
-				},
-			],
-		};
-		const assets = await prisma.asset.findMany({
-			where: search ? whereClause : {},
-			skip: (pageNumber - 1) * perPageNumber,
-			take: perPageNumber,
-		});
-		return NextResponse.json({
-			assets,
-		});
-	} catch (error) {
-		console.error('Error fecthing data', error);
-	}
+	const assets = await prisma.asset.findMany({
+		where: search
+			? { OR: [{ name: { contains: search } }, { description: { contains: search } }] }
+			: {},
+		skip: (pageNumber - 1) * perPageNumber,
+		take: perPageNumber,
+	});
+	return NextResponse.json({
+		assets,
+	});
+	// try {
+	// 	const whereClause = {
+	// 		OR: [
+	// 			{
+	// 				name: {
+	// 					contains: search,
+	// 					mode: 'insensitive',
+	// 				},
+	// 			},
+	// 			{
+	// 				description: {
+	// 					contains: search,
+	// 					mode: 'insensitive',
+	// 				},
+	// 			},
+	// 		],
+	// 	};
+	// 	const assets = await prisma.asset.findMany({
+	// 		where: search ? whereClause : {},
+	// 		skip: (pageNumber - 1) * perPageNumber,
+	// 		take: perPageNumber,
+	// 	});
+	// 	return NextResponse.json({
+	// 		assets,
+	// 	});
+	// } catch (error) {
+	// 	console.error('Error fecthing data', error);
+	// }
 }
 
 export async function POST(request: Request) {
