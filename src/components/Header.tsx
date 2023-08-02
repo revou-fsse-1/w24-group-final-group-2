@@ -102,9 +102,12 @@ export default function Header() {
 				</div>
 
 				<div className="hidden text-[#203C59] md:flex md:flex-col md:relative">
-					<div className="flex gap-4 lg:gap-8">
+					<div className="flex items-center gap-4 lg:gap-8">
 						<Link href={'/auctions'}>
 							<button>Auctions</button>
+						</Link>
+            <Link href={'/profile/registerAsset'}>
+							<button>Register Asset</button>
 						</Link>
 						{handleLoginDisplay()}
 					</div>
