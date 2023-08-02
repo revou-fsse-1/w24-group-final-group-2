@@ -3,22 +3,20 @@ import { indonesianCurrency } from '@/utils/Currency';
 import { useCountdown } from '@/utils/useCountDown';
 import Link from 'next/link';
 import Image from 'next/image';
+<<<<<<< HEAD
+=======
+
+>>>>>>> dcdcdc5 (solved bug price and enddate item card)
 interface IItemCard {
 	id: string;
 	name: string;
 	imageUrl: string;
-	price: number;
+	price: number | any;
 	highestBid: number;
-	endDate: string;
+	endDate: string | any;
 }
-export default function ItemCard({
-	id,
-	name,
-	imageUrl,
-	price,
-	highestBid,
-	endDate,
-}: IItemCard) {
+
+export default function ItemCard({ id, name, imageUrl, price, highestBid, endDate }: IItemCard) {
 	const [days, hours, mins, secs] = useCountdown(endDate);
 
 	return (
@@ -56,9 +54,7 @@ export default function ItemCard({
 			</div>
 
 			<Link href={`/auctions/${id}`}>
-				<button className=" mt-7 w-full max-w-[325px] btn-primary">
-					View Auction
-				</button>
+				<button className=" mt-7 w-full max-w-[325px] btn-primary">View Auction</button>
 			</Link>
 		</div>
 	);
