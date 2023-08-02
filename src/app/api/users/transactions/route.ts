@@ -7,12 +7,38 @@ export async function GET() {
   const session = await getServerSession(authOptions);
 
   // BAKAL DIPAKAI
-  // const transactionList = await prisma.user.findFirst({
+  // const transactionList = await prisma.user.findMany({
   //   where: {
   //     email: session?.user?.email?.toString(),
   //   },
   //   select: {
-  //     assets: true,
+  //     bidAssets: {
+  //       select: {
+  //         transaction: {
+  //           select: {
+  //             assets: {
+  //               select: {
+  //                 name: true,
+  //                 imageUrl: true,
+  //               },
+  //             },
+  //             bidder: {
+  //               select: {
+  //                 currentPrice: true,
+  //                 bidder: {
+  //                   select: {
+  //                     email: true,
+  //                     name: true,
+  //                   },
+  //                 },
+  //               },
+  //             },
+  //             price: true,
+  //             id: true,
+  //           },
+  //         },
+  //       },
+  //     },
   //   },
   // });
 
@@ -28,6 +54,12 @@ export async function GET() {
       bidder: {
         select: {
           currentPrice: true,
+          bidder: {
+            select: {
+              email: true,
+              name: true,
+            },
+          },
         },
       },
       price: true,

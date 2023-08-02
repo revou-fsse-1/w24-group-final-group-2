@@ -7,35 +7,52 @@ export async function GET() {
   const session = await getServerSession(authOptions);
 
   // BAKAL DIPAKAI
-  // const assetList = await prisma.user.findFirst({
-  //   where: {
-  //     email: session?.user?.email?.toString(),
-  //   },
-  //   select: {
-  //     assets: true,
-  //   },
-  // });
-
-  // TESTING ONLY
-  const assetList = await prisma.asset.findMany({
+  const assetList = await prisma.user.findFirst({
+    where: {
+      email: session?.user?.email?.toString(),
+    },
     select: {
-      id: true,
-      openingPrice: true,
-      imageUrl: true,
-      name: true,
-      endTime: true,
-      bidAssets: {
-        orderBy: {
-          currentPrice: "desc",
-        },
+      assets: {
         select: {
-          currentPrice: true,
+          id: true,
+          openingPrice: true,
+          imageUrl: true,
+          name: true,
+          endTime: true,
+          bidAssets: {
+            orderBy: {
+              currentPrice: "desc",
+            },
+            select: {
+              currentPrice: true,
+            },
+            take: 1,
+          },
         },
-        take: 1,
       },
     },
   });
-  return NextResponse.json(assetList);
+
+  // TESTING ONLY
+  // const assetList = await prisma.asset.findMany({
+  //   select: {
+  //     id: true,
+  //     openingPrice: true,
+  //     imageUrl: true,
+  //     name: true,
+  //     endTime: true,
+  //     bidAssets: {
+  //       orderBy: {
+  //         currentPrice: "desc",
+  //       },
+  //       select: {
+  //         currentPrice: true,
+  //       },
+  //       take: 1,
+  //     },
+  //   },
+  // });
+  return NextResponse.json(assetList?.assets);
 }
 
 export async function POST(request: Request) {
