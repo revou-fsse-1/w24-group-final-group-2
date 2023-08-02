@@ -1,73 +1,65 @@
 'use client';
-import { useState, useEffect } from 'react';
 import { indonesianCurrency } from '@/utils/Currency';
+import { useCountdown } from '@/utils/useCountDown';
+import Link from 'next/link';
+import Image from 'next/image';
 interface IItemCard {
 	id: string;
 	name: string;
 	imageUrl: string;
 	price: number;
-	// highestBid: number;
-	endDate: Date;
+	highestBid: number;
+	endDate: string;
 }
 export default function ItemCard({
 	id,
 	name,
 	imageUrl,
 	price,
-	// highesBids,
+	highestBid,
 	endDate,
 }: IItemCard) {
-	const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
-	useEffect(() => {
-		const timer = setInterval(() => {
-			setTimeLeft(calculateTimeLeft());
-		}, 1000);
-		return () => {
-			clearInterval(timer);
-		};
-	});
-
-	function calculateTimeLeft() {
-		const now = new Date();
-		const target = new Date(endDate);
-		const diff = target.getTime() - now.getTime();
-
-		return {
-			days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-			hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-			minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-			seconds: Math.floor((diff % (1000 * 60)) / 1000),
-		};
-	}
-
-	const replacement = new Date();
+	const [days, hours, mins, secs] = useCountdown(endDate);
 
 	return (
-		<div className="text-mkl-secondary">
-			<a href={`/auctions/${id}`}>
-				<img
+		<div className="flex flex-col gap-5 text-mkl-secondary">
+			<Link href={`/auctions/${id}`}>
+				<Image
 					src={`${imageUrl}`}
+					width={600}
+					height={600}
 					alt="dummy-image"
-					className=" max-w-[325px] aspect-square overflow-hidden"
+					className="aspect-square max-w-[325px] overflow-hidden"
 				/>
-			</a>
-			<h3 className="h3 mt-8 max-w-[325px]">{name}</h3>
-			<p className="mt-3">
-				<small>
-					Start: {indonesianCurrency.format(price)}
-					<br />
-				</small>
-				<b>{indonesianCurrency.format(price)}</b>
-			</p>
-			<p className="mt-3 max-w-[325px]">
-				<b>Time Left: </b>
-				{`${timeLeft.days}d ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`}
-			</p>
-			<a href={`/auctions/${id}`}>
+			</Link>
+
+			<h3 className="h3 max-w-[325px] line-clamp-2">{name}</h3>
+
+			<div className="flex flex-col gap-2">
+				<div className="flex flex-col">
+					<p>Starting price:</p>
+					<p>{indonesianCurrency.format(price)}</p>
+				</div>
+
+				<div className="flex flex-col text-lg">
+					<p>Current bid:</p>
+					<p className="font-bold">{indonesianCurrency.format(highestBid)}</p>
+				</div>
+
+				<div className="flex flex-col text-xl">
+					<p>Time Left:</p>
+					<span
+						className="font-bold"
+						suppressHydrationWarning
+					>{`${days}d ${hours}h ${mins}m ${secs}s`}</span>
+				</div>
+			</div>
+
+			<Link href={`/auctions/${id}`}>
 				<button className=" mt-7 w-full max-w-[325px] btn-primary">
 					View Auction
 				</button>
-			</a>
+			</Link>
 		</div>
 	);
 }
