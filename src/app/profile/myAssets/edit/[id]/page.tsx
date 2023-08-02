@@ -206,7 +206,7 @@ export default function EditAsset({ params }: { params: { id: string } }) {
           </div>
 
           <div className="w-full flex flex-col gap-5 md:w-1/2">
-            <div className="w-60 h-60 flex items-center justify-center border">
+            <div className="w-60 h-60 flex items-center justify-center border overflow-auto">
               {!data ? (
                 "..."
               ) : (
