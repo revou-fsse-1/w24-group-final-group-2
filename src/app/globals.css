@@ -3,23 +3,35 @@
 @tailwind utilities;
 
 @layer components {
-  .btn-primary {
-    @apply px-8 py-3 transition-opacity duration-300 rounded-xl bg-mkl-primary text-mkl-secondary hover:opacity-60;
-  }
+	.btn-primary {
+		@apply px-8 py-3 transition-opacity duration-300 rounded-xl bg-mkl-primary text-mkl-secondary hover:opacity-60;
+	}
 
-  .btn-secondary {
-    @apply px-8 py-3 transition-opacity duration-300 border-2 rounded-xl text-mkl-primary border-mkl-primary bg-mkl-secondary hover:opacity-60;
-  }
+	.btn-secondary {
+		@apply px-8 py-3 transition-opacity duration-300 border-2 rounded-xl text-mkl-primary border-mkl-primary bg-mkl-secondary hover:opacity-60;
+	}
+
+	.h1 {
+		@apply text-5xl font-bold;
+	}
+
+	.h2 {
+		@apply text-2xl font-bold;
+	}
+
+	.h3 {
+		@apply text-xl font-bold;
+	}
 }
 
 .home-background {
-  background: linear-gradient(
-      0deg,
-      rgba(32, 61, 89, 0.8) 0%,
-      rgba(32, 61, 89, 0.8) 100%
-    ),
-    url("/assets/bg-home.webp"), lightgray 50%;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+	background: linear-gradient(
+			0deg,
+			rgba(32, 61, 89, 0.8) 0%,
+			rgba(32, 61, 89, 0.8) 100%
+		),
+		url('/assets/bg-home.webp'), lightgray 50%;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
 }
