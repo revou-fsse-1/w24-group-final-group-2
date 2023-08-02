@@ -4,11 +4,41 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { indonesianCurrency } from "@/utils/Currency";
+import { useSession } from "next-auth/react";
+import { redirect, useRouter } from "next/navigation";
+import axios from "axios";
+import useSWR from "swr";
+import { useState } from "react";
+import Image from "next/image";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function EditAsset({ params }: { params: { id: string } }) {
-  const currentDate = new Date().toISOString();
-  const exampleCurrency = 500000;
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
+  const currentDate = new Date().toISOString().split(".")[0];
+
+  if (status == "unauthenticated") {
+    redirect("/login");
+  }
+
+  // Fetching data
+  const fetchData = (url: string) =>
+    axios
+      .get(url)
+      .then((data) => {
+        return data.data;
+      })
+      .catch((error) => {
+        throw new Error("Failed fetching data");
+      });
+  const { data, isLoading } = useSWR(
+    `/api/users/assets/${params.id}`,
+    fetchData
+  );
+
+  // Yup & react hook form setup
   const schema = yup.object({
     description: yup.string().required("Description required"),
     endTime: yup
@@ -17,23 +47,52 @@ export default function EditAsset({ params }: { params: { id: string } }) {
       .required("End time required")
       .typeError("Invalid date"),
   });
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(schema), mode: "onTouched" });
+  } = useForm({
+    values: {
+      description: !data ? "" : data.description,
+      endTime: !data ? "" : data.endTime.split(".")[0].slice("", -3),
+    },
+    resolver: yupResolver(schema),
+    mode: "onTouched",
+  });
 
-  const onSubmit = (data: any) => {
+  // Handle submit
+  const onSubmit = async (data: any) => {
     const formatDate = new Date(data.endTime).toISOString();
-    console.log({
-      ...data,
-      endTime: formatDate,
-    });
+
+    try {
+      setDisableSubmit(true);
+      const response = await axios.patch(`/api/users/assets/${params.id}`, {
+        description: data.description,
+        endTime: formatDate,
+      });
+
+      console.log(response);
+      console.log("---UPDATE ASSET SUCCESS---");
+      router.push("/profile/myAssets");
+    } catch (error) {
+      setDisableSubmit(false);
+      throw new Error("Failed to update asset");
+    }
   };
 
-  const onDelete = () => {
-    console.log("Delete Asset");
+  // Handle delete
+  const onDelete = async () => {
+    try {
+      setDisableSubmit(true);
+      const response = await axios.delete(`/api/users/assets/${params.id}`);
+
+      console.log(response);
+      console.log("!!! DELETED ASSET !!!");
+      router.push("/profile/myAssets");
+    } catch (error) {
+      setDisableSubmit(false);
+      throw new Error("Failed to delete asset");
+    }
   };
 
   return (
@@ -50,64 +109,119 @@ export default function EditAsset({ params }: { params: { id: string } }) {
           <div className="w-full flex flex-col gap-5 md:w-1/2">
             <div className="flex flex-col gap-1 md:w-3/4">
               <label htmlFor="name">Asset Name</label>
-              <p className="font-bold">Asset Name 1</p>
+              <p className="font-bold">{!data ? "..." : data.name}</p>
             </div>
 
             <div className="flex flex-col gap-1 md:w-3/4">
               <label htmlFor="description">Description</label>
-              <textarea
-                rows={5}
-                {...register("description")}
-                className="resize-none px-3 py-2 border border-black rounded-md"
-              />
+              {!data ? (
+                <textarea
+                  rows={9}
+                  disabled
+                  className="resize-none text-base px-3 py-2 border rounded-md"
+                />
+              ) : (
+                <textarea
+                  rows={9}
+                  {...register("description")}
+                  className="resize-none text-base px-3 py-2 border border-black rounded-md"
+                />
+              )}
               <span className="text-sm text-rose-500">
-                {errors.description?.message}
+                {errors.description?.message?.toString()}
               </span>
             </div>
 
             <div className="flex flex-col gap-1 md:w-3/4">
               <label htmlFor="openingPrice">Starting Price</label>
               <p className="font-bold">
-                {indonesianCurrency.format(exampleCurrency)}
+                {!data
+                  ? "Rp. ..."
+                  : indonesianCurrency.format(data.openingPrice)}
               </p>
             </div>
 
             <div className="flex flex-col gap-1 md:w-3/4">
               <label htmlFor="endTime">Auction End Date</label>
-              <input
-                type="datetime-local"
-                {...register("endTime")}
-                className="px-3 py-2 border border-black rounded-md"
-              />
+              {!data ? (
+                <input
+                  type="datetime-local"
+                  disabled
+                  className="px-3 py-2 border rounded-md"
+                />
+              ) : (
+                <input
+                  type="datetime-local"
+                  {...register("endTime")}
+                  className="px-3 py-2 border border-black rounded-md"
+                />
+              )}
               <span className="text-sm text-rose-500">
-                {errors.endTime?.message}
+                {errors.endTime?.message?.toString()}
               </span>
             </div>
 
-            <button
-              type="submit"
-              className="w-fit px-8 py-3 rounded-md bg-[#EAC066]"
-            >
-              Register Asset
-            </button>
+            {disableSubmit ? (
+              <>
+                <button
+                  disabled
+                  className="w-fit px-8 py-3 rounded-md bg-[#EAC066]"
+                >
+                  Edit Asset
+                </button>
 
-            <button
-              type="button"
-              onClick={() => onDelete()}
-              className="w-fit px-8 py-3 mt-10 rounded-md bg-[#FF5959]"
-            >
-              Delete Asset
-            </button>
+                <button
+                  disabled
+                  className="w-fit px-8 py-3 mt-10 rounded-md bg-[#FF5959]"
+                >
+                  Delete Asset
+                </button>
+              </>
+            ) : (
+              <>
+                {!data ? (
+                  <div className="w-1/3 p-3">
+                    <LoadingSpinner />
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      type="submit"
+                      className="w-fit px-8 py-3 rounded-md bg-[#EAC066]"
+                    >
+                      Edit Asset
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => onDelete()}
+                      className="w-fit px-8 py-3 mt-10 rounded-md bg-[#FF5959]"
+                    >
+                      Delete Asset
+                    </button>
+                  </>
+                )}
+              </>
+            )}
           </div>
 
           <div className="w-full flex flex-col gap-5 md:w-1/2">
-            <div className="w-48 h-48 flex items-center justify-center border">
-              Image
+            <div className="w-60 h-60 flex items-center justify-center border">
+              {!data ? (
+                "..."
+              ) : (
+                <Image
+                  src={data.imageUrl}
+                  width={500}
+                  height={500}
+                  alt={data.name + " image"}
+                />
+              )}
             </div>
 
-            <div className="flex flex-col gap-1 md:w-3/4">
+            <div className="flex flex-col gap-1 overflow-x-auto md:w-3/4">
               <label htmlFor="imageUrl">Image Url</label>
-              <p className="font-bold">https://exampleUrl.com/1</p>
+              <p className="font-bold">{!data ? "..." : data.imageUrl}</p>
             </div>
           </div>
         </div>

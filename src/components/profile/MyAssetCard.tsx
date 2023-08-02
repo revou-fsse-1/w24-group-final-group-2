@@ -29,14 +29,14 @@ export default function MyAssetCard({
   const displayBidStatus = () => {
     if (timeRemaining > 0) {
       return (
-        <div className="w-2/3 min-w-fit p-2 bg-gray-200 rounded-lg border-l-8 border-black md:w-full">
+        <div className="w-2/3 min-w-fit p-2 bg-gray-200 rounded-lg border-l-8 border-black md:w-[340px]">
           <span>Bidding In Progress</span>
         </div>
       );
     }
 
     return (
-      <div className="w-2/3 min-w-fit p-2 bg-green-200 rounded-lg border-l-8 border-green-800 md:w-full">
+      <div className="w-2/3 min-w-fit p-2 bg-green-200 rounded-lg border-l-8 border-green-800 md:w-[340px]">
         <span>Bidding Complete</span>
       </div>
     );

@@ -4,11 +4,42 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import IconWarning from "@/components/icons/IconWarning";
+import useSWR from "swr";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import axios from "axios";
+import { indonesianCurrency } from "@/utils/Currency";
+import { useState } from "react";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function Profile() {
+  const { data: session, status } = useSession();
+  const [disableSubmit, setDisableSubmit] = useState(false);
+
+  if (status == "unauthenticated") {
+    redirect("/login");
+  }
+
+  // Fetching data
+  const fetchData = (url: string) =>
+    axios
+      .get(url)
+      .then((data) => {
+        return data.data;
+      })
+      .catch((error) => {
+        throw new Error("Failed fetching user data");
+      });
+  const { data, isLoading } = useSWR(
+    `/api/users/${session?.user?.email}`,
+    fetchData
+  );
+
+  // Phone number regex
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
+  // Yup & react hook form setup
   const schema = yup.object({
     username: yup.string().required("username required"),
     creditAmount: yup
@@ -22,15 +53,36 @@ export default function Profile() {
       .matches(phoneRegExp, "Invalid phone number")
       .required("Phone number required"),
   });
-
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(schema), mode: "onTouched" });
+  } = useForm({
+    values: {
+      username: !data ? "" : data.username,
+      creditAmount: !data ? "" : data.creditAmount,
+      name: !data ? "" : data.name,
+      address: !data ? "" : data.address,
+      phoneNumber: !data ? "" : data.phoneNumber,
+    },
+    resolver: yupResolver(schema),
+    mode: "onTouched",
+  });
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  // Handle submit
+  const onSubmit = async (formData: any) => {
+    try {
+      setDisableSubmit(true);
+      const response = await axios.patch(
+        `/api/users/${session?.user?.email}`,
+        formData
+      );
+
+      window.location.reload();
+    } catch (error) {
+      setDisableSubmit(false);
+      throw new Error("Failed to update profile");
+    }
   };
 
   return (
@@ -45,30 +97,44 @@ export default function Profile() {
 
         <div className="flex flex-col gap-1 md:w-3/4">
           <label htmlFor="email">Email</label>
-          <span className="font-bold">exampleEmail@google.com</span>
+          <span className="font-bold">{!data ? "..." : data.email}</span>
         </div>
 
         <div className="flex flex-col gap-1 md:w-3/4">
           <label htmlFor="username">Username</label>
-          <input
-            {...register("username")}
-            className="px-3 py-2 border border-black rounded-md"
-          />
+          {!data ? (
+            <input disabled className="px-3 py-2 border rounded-md" />
+          ) : (
+            <input
+              {...register("username")}
+              className="px-3 py-2 border border-black rounded-md"
+            />
+          )}
           <span className="text-sm text-rose-500">
-            {errors.username?.message}
+            {errors.username?.message?.toString()}
           </span>
         </div>
 
         <div className="flex flex-col gap-1 md:w-3/4">
           <label htmlFor="creditAmount">Credit Amount</label>
-          <input
-            type="number"
-            defaultValue={0}
-            {...register("creditAmount")}
-            className="px-3 py-2 border border-black rounded-md"
-          />
+          <span className="font-bold">
+            {!data ? "Rp. ..." : indonesianCurrency.format(data.creditAmount)}
+          </span>
+          {!data ? (
+            <input
+              type="number"
+              disabled
+              className="px-3 py-2 border rounded-md"
+            />
+          ) : (
+            <input
+              type="number"
+              {...register("creditAmount")}
+              className="px-3 py-2 border border-black rounded-md"
+            />
+          )}
           <span className="text-sm text-rose-500">
-            {errors.creditAmount?.message}
+            {errors.creditAmount?.message?.toString()}
           </span>
         </div>
 
@@ -90,42 +156,69 @@ export default function Profile() {
 
         <div className="flex flex-col gap-1 md:w-3/4">
           <label htmlFor="name">Full Name</label>
-          <input
-            {...register("name")}
-            className="px-3 py-2 border border-black rounded-md"
-          />
-          <span className="text-sm text-rose-500">{errors.name?.message}</span>
+          {!data ? (
+            <input disabled className="px-3 py-2 border rounded-md" />
+          ) : (
+            <input
+              {...register("name")}
+              className="px-3 py-2 border border-black rounded-md"
+            />
+          )}
+          <span className="text-sm text-rose-500">
+            {errors.name?.message?.toString()}
+          </span>
         </div>
 
         <div className="flex flex-col gap-1 md:w-3/4">
           <label htmlFor="address">Address</label>
-          <textarea
-            rows={5}
-            {...register("address")}
-            className="resize-none px-3 py-2 border border-black rounded-md"
-          />
+          {!data ? (
+            <textarea
+              rows={5}
+              disabled
+              className="resize-none px-3 py-2 border rounded-md"
+            />
+          ) : (
+            <textarea
+              rows={5}
+              {...register("address")}
+              className="resize-none px-3 py-2 border border-black rounded-md"
+            />
+          )}
           <span className="text-sm text-rose-500">
-            {errors.address?.message}
+            {errors.address?.message?.toString()}
           </span>
         </div>
 
         <div className="flex flex-col gap-1 md:w-3/4">
           <label htmlFor="phoneNumber">Phone Number</label>
-          <input
-            {...register("phoneNumber")}
-            className="px-3 py-2 border border-black rounded-md"
-          />
+          {!data ? (
+            <input disabled className="px-3 py-2 border rounded-md" />
+          ) : (
+            <input
+              {...register("phoneNumber")}
+              className="px-3 py-2 border border-black rounded-md"
+            />
+          )}
           <span className="text-sm text-rose-500">
-            {errors.phoneNumber?.message}
+            {errors.phoneNumber?.message?.toString()}
           </span>
         </div>
 
-        <button
-          type="submit"
-          className="w-fit px-8 py-3 rounded-md bg-[#EAC066]"
-        >
-          Update Profile
-        </button>
+        {!data || disableSubmit ? (
+          <button
+            disabled
+            className="w-fit px-8 py-3 rounded-md bg-[#EAC066] bg-opacity-70"
+          >
+            <LoadingSpinner />
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className="w-fit px-8 py-3 rounded-md bg-[#EAC066]"
+          >
+            Update Profile
+          </button>
+        )}
       </form>
     </div>
   );
