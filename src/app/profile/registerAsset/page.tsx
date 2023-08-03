@@ -147,7 +147,7 @@ export default function RegisterAsset() {
           </div>
 
           <div className="w-full flex flex-col gap-5 md:w-1/2">
-            <div className="w-60 h-60 flex items-center justify-center border overflow-auto">
+            <div className="w-60 h-60 flex items-center justify-center border overflow-clip">
               {!urlRegex.test(watchImageUrl) ? (
                 <>Image</>
               ) : (
@@ -156,7 +156,6 @@ export default function RegisterAsset() {
                   width={500}
                   height={500}
                   alt={"preview image"}
-                  className="object-cover"
                 />
               )}
             </div>
