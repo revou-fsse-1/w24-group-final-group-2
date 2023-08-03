@@ -6,44 +6,21 @@ import { authOptions } from "../../auth/[...nextauth]/route";
 export async function GET() {
   const session = await getServerSession(authOptions);
 
-  // BAKAL DIPAKAI
-  // const transactionList = await prisma.user.findMany({
-  //   where: {
-  //     email: session?.user?.email?.toString(),
-  //   },
-  //   select: {
-  //     bidAssets: {
-  //       select: {
-  //         transaction: {
-  //           select: {
-  //             assets: {
-  //               select: {
-  //                 name: true,
-  //                 imageUrl: true,
-  //               },
-  //             },
-  //             bidder: {
-  //               select: {
-  //                 currentPrice: true,
-  //                 bidder: {
-  //                   select: {
-  //                     email: true,
-  //                     name: true,
-  //                   },
-  //                 },
-  //               },
-  //             },
-  //             price: true,
-  //             id: true,
-  //           },
-  //         },
-  //       },
-  //     },
-  //   },
-  // });
+  const currentUser = await prisma.user.findFirst({
+    where: {
+      email: session?.user?.email?.toString(),
+    },
+    select: {
+      id: true,
+    },
+  });
 
-  // TESTING ONLY
   const transactionList = await prisma.transaction.findMany({
+    where: {
+      bidder: {
+        userId: currentUser?.id,
+      },
+    },
     select: {
       assets: {
         select: {
@@ -53,13 +30,7 @@ export async function GET() {
       },
       bidder: {
         select: {
-          currentPrice: true,
-          bidder: {
-            select: {
-              email: true,
-              name: true,
-            },
-          },
+          bidAmount: true,
         },
       },
       price: true,
@@ -68,4 +39,26 @@ export async function GET() {
   });
 
   return NextResponse.json(transactionList);
+}
+
+export async function POST(request: Request) {
+  const session = await getServerSession(authOptions);
+  const json = await request.json();
+
+  const updateUserCredits = await prisma.user.update({
+    where: {
+      email: session?.user?.email?.toString(),
+    },
+    data: {
+      creditAmount: {
+        decrement: json.price,
+      },
+    },
+  });
+
+  const createTransaction = await prisma.transaction.create({
+    data: { ...json },
+  });
+
+  return NextResponse.json(createTransaction);
 }
