@@ -71,7 +71,7 @@ export default function ItemCard({
       </div>
 
       <Link href={`/auctions/${id}`}>
-        <button className=" mt-7 w-full max-w-[325px] btn-primary">
+        <button className="w-full max-w-[325px] btn-primary hover:btn-secondary">
           View Auction
         </button>
       </Link>

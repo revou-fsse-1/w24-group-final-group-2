@@ -5,6 +5,7 @@ import ItemCard from "@/components/ItemCard";
 // back end import related
 import { prisma } from "@/libs/db";
 import IconDoubleRight from "@/components/icons/IconDoubleRight";
+import Link from "next/link";
 
 // server side data fetching
 async function getAllAssets(take: number) {
@@ -40,10 +41,10 @@ export default async function Home() {
       <Header />
       <main className="flex flex-col justify-center w-full">
         <section className="flex items-center justify-center w-full h-screen bg-no-repeat bg-cover home-background ">
-          <div className="container mx-5 md:mx-0">
-            <div className="w-full lg:w-1/2 -mt-[150px]">
-              <h1 className="h1 text-mkl-primary">WELCOME TO MARKILANG</h1>
-              <h2 className="mt-2 font-normal h2 text-mkl-neutral">
+          <div className="w-full max-w-7xl px-6 xl:px-0">
+            <div className="w-full flex flex-col gap-2 lg:w-1/2">
+              <h1 className="h1 w- text-mkl-primary">WELCOME TO MARKILANG</h1>
+              <h2 className="font-normal h2 text-mkl-neutral">
                 Your Gateway to the World of Collectibles!
               </h2>
               <p className="mt-8 text-mkl-neutral">
@@ -55,17 +56,17 @@ export default async function Home() {
                 destination for discovering hidden treasures without breaking
                 the bank.
               </p>
-              <div className="mt-8">
-                <button className="w-full md:w-fit btn-primary">
-                  Start Auction
-                </button>
-                <button className="w-full mt-5 md:w-fit md:ml-10 btn-secondary">
-                  Explore Auction
-                </button>
+              <div className="mt-8 flex flex-col gap-10 md:flex-row">
+                <Link href={"/auctions"}>
+                  <button className="w-full text-lg font-bold md:w-fit btn-primary hover:btn-secondary">
+                    Explore Auction
+                  </button>
+                </Link>
               </div>
             </div>
           </div>
         </section>
+
         <section className="flex justify-center w-full">
           <div className="container flex flex-col mx-5 md:mx-0 my-28">
             <div>
@@ -82,7 +83,7 @@ export default async function Home() {
                   </span>
                 </a>
               </div>
-              <div className="flex flex-col items-center gap-14 lg:gap-0 lg:flex-row lg:justify-between">
+              <div className="flex flex-col items-center gap-14 flex-wrap md:gap-0 md:flex-row md:justify-between">
                 {assets.map((asset) => {
                   return (
                     <>
