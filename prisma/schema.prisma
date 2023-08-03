@@ -65,7 +65,7 @@ model User {
 
 model Asset {
   id           String        @id @default(cuid())
-  imageUrl     String        @unique
+  imageUrl     String
   name         String
   description  String
   openingPrice Int?
@@ -103,5 +103,3 @@ model Transaction {
   assets     Asset      @relation(fields: [assetId], references: [id])
   bidder     BidAsset   @relation(fields: [bidderId], references: [id])
 }
-
-
