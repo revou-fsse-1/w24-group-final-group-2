@@ -7,7 +7,7 @@ export async function GET() {
   const session = await getServerSession(authOptions);
 
   // Get user bids list - BAKAL DIPAKAI
-  const bidList = await prisma.user.findFirst({
+  const userBidList = await prisma.user.findFirst({
     where: {
       email: session?.user?.email?.toString(),
     },
@@ -16,13 +16,26 @@ export async function GET() {
         select: {
           id: true,
           bidAmount: true,
-          currentPrice: true,
           asset: {
             select: {
               id: true,
               imageUrl: true,
               name: true,
               endTime: true,
+              bidAssets: {
+                orderBy: {
+                  bidAmount: "desc",
+                },
+                select: {
+                  bidAmount: true,
+                  bidder: {
+                    select: {
+                      email: true,
+                    },
+                  },
+                },
+                take: 1,
+              },
             },
           },
         },
@@ -30,26 +43,5 @@ export async function GET() {
     },
   });
 
-  // TESTING ONLY
-  // const bidList = await prisma.bidAsset.findMany({
-  //   select: {
-  //     id: true,
-  //     bidAmount: true,
-  //     currentPrice: true,
-  //     asset: {
-  //       select: {
-  //         id: true,
-  //         imageUrl: true,
-  //         name: true,
-  //         endTime: true,
-  //       },
-  //     },
-  //     bidder: {
-  //       select: {
-  //         name: true,
-  //       },
-  //     },
-  //   },
-  // });
-  return NextResponse.json(bidList?.bidAssets);
+  return NextResponse.json(userBidList?.bidAssets);
 }
