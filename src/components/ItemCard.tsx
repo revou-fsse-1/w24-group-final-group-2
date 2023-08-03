@@ -56,7 +56,7 @@ export default function ItemCard({
         </div>
 
         <div className="flex flex-col text-lg">
-          <p>Current bid:</p>
+          <p>Highest bid:</p>
           {highestBid == 0 ? (
             <p className="font-bold">Rp. ---</p>
           ) : (

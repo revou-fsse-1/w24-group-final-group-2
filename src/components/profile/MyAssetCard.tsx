@@ -103,7 +103,7 @@ export default function MyAssetCard({
                 <span className="text-xl font-bold">Current Bid: Rp. ---</span>
               ) : (
                 <span className="text-xl font-bold">
-                  Current Bid: {indonesianCurrency.format(highestBid)}
+                  Highest Bid: {indonesianCurrency.format(highestBid)}
                 </span>
               )}
             </div>
