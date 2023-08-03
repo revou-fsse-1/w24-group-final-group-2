@@ -3,10 +3,6 @@ import { indonesianCurrency } from '@/utils/Currency';
 import { useCountdown } from '@/utils/useCountDown';
 import Link from 'next/link';
 import Image from 'next/image';
-<<<<<<< HEAD
-=======
-
->>>>>>> dcdcdc5 (solved bug price and enddate item card)
 interface IItemCard {
 	id: string;
 	name: string;
@@ -16,8 +12,27 @@ interface IItemCard {
 	endDate: string | any;
 }
 
-export default function ItemCard({ id, name, imageUrl, price, highestBid, endDate }: IItemCard) {
+export default function ItemCard({
+	id,
+	name,
+	imageUrl,
+	price,
+	highestBid,
+	endDate,
+}: IItemCard) {
 	const [days, hours, mins, secs] = useCountdown(endDate);
+	const timeRemaining = days + hours + mins + secs;
+
+	const displayTimeLeft = () => {
+		return timeRemaining <= 0 ? (
+			<span className="font-bold text-red-500">Time Left: 0 d 0 h 0 m 0 s</span>
+		) : (
+			<span
+				className="font-bold"
+				suppressHydrationWarning
+			>{`${days}d ${hours}h ${mins}m ${secs}s`}</span>
+		);
+	};
 
 	return (
 		<div className="flex flex-col gap-5 text-mkl-secondary">
@@ -36,25 +51,28 @@ export default function ItemCard({ id, name, imageUrl, price, highestBid, endDat
 			<div className="flex flex-col gap-2">
 				<div className="flex flex-col">
 					<p>Starting price:</p>
-					<p>{indonesianCurrency.format(price)}</p>
+					<p className="font-bold">{indonesianCurrency.format(price)}</p>
 				</div>
 
 				<div className="flex flex-col text-lg">
 					<p>Current bid:</p>
-					<p className="font-bold">{indonesianCurrency.format(highestBid)}</p>
+					{highestBid == 0 ? (
+						<p className="font-bold">Rp. ---</p>
+					) : (
+						<p className="font-bold">{indonesianCurrency.format(highestBid)}</p>
+					)}
 				</div>
 
 				<div className="flex flex-col text-xl">
 					<p>Time Left:</p>
-					<span
-						className="font-bold"
-						suppressHydrationWarning
-					>{`${days}d ${hours}h ${mins}m ${secs}s`}</span>
+					{displayTimeLeft()}
 				</div>
 			</div>
 
 			<Link href={`/auctions/${id}`}>
-				<button className=" mt-7 w-full max-w-[325px] btn-primary">View Auction</button>
+				<button className=" mt-7 w-full max-w-[325px] btn-primary">
+					View Auction
+				</button>
 			</Link>
 		</div>
 	);
