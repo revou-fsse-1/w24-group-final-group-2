@@ -49,12 +49,11 @@ export default function AuctionPage() {
 	if (isLoading) {
 		return <div>loading...</div>;
 	}
-
+	const length = data.bidAssets.length - 1;
 	const isSeller = data.sellerId === session?.user.id;
 	async function handleSubmit() {
 		//check if there is any bid done
 		if (data.bidAssets.length > 0) {
-			const length = data.bidAssets.length - 1;
 			//check if the last bidder is the user
 			if ((data.bidAssets[length].userId = session?.user.id)) {
 				//check if value is bigger than the highest bid
@@ -96,6 +95,7 @@ export default function AuctionPage() {
 							type="input"
 							placeholder="Please place your bid!"
 							onChange={(e) => setBidAmountValue(Number(e.target.value))}
+							value={Number(data.bidAssets[length].bidAmount) + 100000}
 						/>
 						<button className="btn-primary" onClick={handleSubmit}>
 							Place Bid!
