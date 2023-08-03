@@ -41,7 +41,6 @@ export default function Profile() {
 
   // Yup & react hook form setup
   const schema = yup.object({
-    username: yup.string().required("username required"),
     creditAmount: yup
       .number()
       .min(0, "Invalid credit amount")
@@ -59,8 +58,7 @@ export default function Profile() {
     formState: { errors },
   } = useForm({
     values: {
-      username: !data ? "" : data.username,
-      creditAmount: !data ? "" : data.creditAmount,
+      creditAmount: !data ? 0 : data.creditAmount,
       name: !data ? "" : data.name,
       address: !data ? "" : data.address,
       phoneNumber: !data ? "" : data.phoneNumber,
@@ -101,25 +99,11 @@ export default function Profile() {
         </div>
 
         <div className="flex flex-col gap-1 md:w-3/4">
-          <label htmlFor="username">Username</label>
-          {!data ? (
-            <input disabled className="px-3 py-2 border rounded-md" />
-          ) : (
-            <input
-              {...register("username")}
-              className="px-3 py-2 border border-black rounded-md"
-            />
-          )}
-          <span className="text-sm text-rose-500">
-            {errors.username?.message?.toString()}
-          </span>
-        </div>
-
-        <div className="flex flex-col gap-1 md:w-3/4">
           <label htmlFor="creditAmount">Credit Amount</label>
           <span className="font-bold">
             {!data ? "Rp. ..." : indonesianCurrency.format(data.creditAmount)}
           </span>
+
           {!data ? (
             <input
               type="number"
