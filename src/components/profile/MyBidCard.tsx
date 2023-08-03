@@ -15,6 +15,7 @@ type MyBidCardProps = {
   highestBid: number;
   bidderEmail: string;
   myEmail: string;
+  hasTransaction: boolean;
 };
 
 export default function MyBidCard({
@@ -27,6 +28,7 @@ export default function MyBidCard({
   highestBid,
   bidderEmail,
   myEmail,
+  hasTransaction,
 }: MyBidCardProps) {
   const [days, hours, mins, secs] = useCountdown(endTime);
   const timeRemaining = days + hours + mins + secs;
@@ -86,7 +88,10 @@ export default function MyBidCard({
 
         <div className="flex flex-col gap-5 justify-between md:flex-row md:w-5/6">
           <div className="flex flex-col gap-5 justify-between md:w-4/6  md:gap-7">
-            <Link href={`/auctions/${assetId}`} className="line-clamp-5 md:line-clamp-2">
+            <Link
+              href={`/auctions/${assetId}`}
+              className="line-clamp-5 md:line-clamp-2"
+            >
               <span className="text-2xl font-bold text-[#203C59] md:text-3xl">
                 {assetName}
               </span>
@@ -111,7 +116,7 @@ export default function MyBidCard({
                 View Asset
               </button>
             </Link>
-            {timeRemaining < 0 && bidderEmail == myEmail ? (
+            {timeRemaining < 0 && bidderEmail == myEmail && !hasTransaction ? (
               <Link href={`/profile/transactions/checkout/${bidId}`}>
                 <button className="w-fit px-5 py-3 rounded-md bg-[#EAC066]">
                   Proceed to Checkout
@@ -119,6 +124,11 @@ export default function MyBidCard({
               </Link>
             ) : (
               ""
+            )}
+            {hasTransaction && (
+              <div className="w-fit px-5 py-3 rounded-md bg-green-300">
+                <span>Payment Successful</span>
+              </div>
             )}
           </div>
         </div>
