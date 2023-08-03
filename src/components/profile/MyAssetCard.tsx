@@ -12,7 +12,8 @@ type MyAssetCardProps = {
   assetName: string;
   endTime: string;
   startingPrice: number;
-  currentPrice: number;
+  highestBid: number;
+  bidderName: string;
 };
 
 export default function MyAssetCard({
@@ -21,7 +22,8 @@ export default function MyAssetCard({
   assetName,
   endTime,
   startingPrice,
-  currentPrice,
+  highestBid,
+  bidderName,
 }: MyAssetCardProps) {
   const [days, hours, mins, secs] = useCountdown(endTime);
   const timeRemaining = days + hours + mins + secs;
@@ -36,9 +38,21 @@ export default function MyAssetCard({
     }
 
     return (
-      <div className="w-2/3 min-w-fit p-2 bg-green-200 rounded-lg border-l-8 border-green-800 md:w-[340px]">
-        <span>Bidding Complete</span>
-      </div>
+      <>
+        <div className="w-2/3 min-w-fit p-2 bg-green-200 rounded-lg border-l-8 border-green-800 md:w-[340px]">
+          <span>Bidding Complete</span>
+        </div>
+        {!bidderName ? (
+          <div className="w-2/3 min-w-fit py-2 px-4 bg-red-200 rounded-lg md:w-[340px]">
+            <span>Asset failed to be sold</span>
+          </div>
+        ) : (
+          <div className="w-2/3 min-w-fit py-2 px-4 flex flex-col gap-4 bg-gray-200 rounded-lg md:flex-row md:w-[340px]">
+            <span>Asset sold to:</span>
+            <span className="font-bold">{bidderName}</span>
+          </div>
+        )}
+      </>
     );
   };
 
@@ -85,9 +99,13 @@ export default function MyAssetCard({
               <p className="font-bold">
                 Starting Price: {indonesianCurrency.format(startingPrice)}
               </p>
-              <span className="text-xl font-bold">
-                Current Bid: {indonesianCurrency.format(currentPrice)}
-              </span>
+              {highestBid == 0 ? (
+                <span className="text-xl font-bold">Current Bid: Rp. ---</span>
+              ) : (
+                <span className="text-xl font-bold">
+                  Current Bid: {indonesianCurrency.format(highestBid)}
+                </span>
+              )}
             </div>
           </div>
 

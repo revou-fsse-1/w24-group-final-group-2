@@ -51,9 +51,8 @@ export default function MyAssets() {
           assetName={asset.name}
           endTime={asset.endTime}
           startingPrice={asset.openingPrice}
-          currentPrice={
-            !asset.bidAssets[0] ? 0 : asset.bidAssets[0].currentPrice
-          }
+          highestBid={!asset.bidAssets[0] ? 0 : asset.bidAssets[0].bidAmount}
+          bidderName={!asset.bidAssets[0] ? "" : asset.bidAssets[0].bidder.name}
         />
       ));
     }
