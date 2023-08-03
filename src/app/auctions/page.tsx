@@ -5,58 +5,35 @@ import axios from "axios";
 import ItemCard from "@/components/ItemCard";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import useSWR from "swr";
 
 interface IAsset {
   id: string;
   name: string;
   imageUrl: string;
   openingPrice: number;
-  // highestBid: number;
+  highestBid: number;
   endTime: Date;
 }
+
 export default function AuctionList() {
-  const [assets, setAssets] = useState<IAsset[]>([]);
+  const [assets, setAssets] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [isInitLoad, setInitLoad] = useState(true);
 
   const search = useSearchParams().get("search");
 
-  // Fetching data
-  // const fetcher = (url: string) =>
-  //   axios
-  //     .get(url)
-  //     .then((data) => {
-  //       return data.data;
-  //     })
-  //     .catch((error) => {
-  //       throw new Error("Failed fetching data");
-  //     });
-  // const { data, isLoading } = useSWR(
-  //   `/api/assets?page=${page}&limit=10${search ? `&search=${search}` : ""}`,
-  //   fetcher
-  // );
-
-  // if (isLoading) {
-  //   console.log("Loading...");
-  // }
-
-  // if (!isLoading) {
-  //   console.log(data);
-  // }
-
   async function loadMoreAssets() {
     setLoading(true);
     console.log("loadMoreAssets");
     try {
       const res = await axios.get(
-        `/api/assets?page=${page}&limit=20${search ? `&search=${search}` : ""}`
+        `/api/assets?page=${page}&limit=10${search ? `&search=${search}` : ""}`
       );
 
       console.log(res.data.assets);
       const newAssets: IAsset[] = res.data.assets;
-      setAssets((prevAssets) => [...prevAssets, ...newAssets]);
+      setAssets((prevAssets: any) => [...prevAssets, ...newAssets]);
       setPage((prevPage) => prevPage + 1);
     } catch (error) {
       console.error("Error fetching data", error);
@@ -74,7 +51,7 @@ export default function AuctionList() {
       console.log(res.data.assets);
 
       const newAssets: IAsset[] = res.data.assets;
-      setAssets((prevAssets) => [...prevAssets, ...newAssets]);
+      setAssets((prevAssets: any) => [...prevAssets, ...newAssets]);
       setPage((prevPage) => prevPage + 1);
     } catch (error) {
       console.error("Error fetching data", error);
@@ -86,10 +63,6 @@ export default function AuctionList() {
     loadMoreAssets();
   }, []);
 
-  function handleLoadMore() {
-    loadMoreAssets();
-  }
-
   return (
     <>
       <Header />
@@ -97,24 +70,28 @@ export default function AuctionList() {
         <section className="container flex flex-col mx-5 md:mx-0">
           <div className="mt-10 ml-10 md:ml-0">
             <h2 className="h2 text-mkl-secondary">
-              {search ? `Search result of ${search}` : `Auction List`}
+              {search ? `Searching for: ${search}` : `Auction List`}
             </h2>
             <hr className="mt-2 border-2 w-44 bg-mkl-primary border-mkl-primary" />
             <hr className="mt-3 border-2 w-36 bg-mkl-primary border-mkl-primary" />
           </div>
 
           <div className="grid items-start justify-center w-full mt-9 md:grid-cols-2 lg:grid-cols-3 lg:gap-x-10 gap-x-5 gap-y-7">
-            {assets.map((asset) => (
-              <ItemCard
-                key={asset.id}
-                id={asset.id}
-                name={asset.name}
-                imageUrl={asset.imageUrl}
-                price={asset.openingPrice}
-                highestBid={asset.openingPrice}
-                endDate={String(asset.endTime)}
-              />
-            ))}
+            {!loading
+              ? assets.map((asset: any) => (
+                  <ItemCard
+                    key={asset.id}
+                    id={asset.id}
+                    name={asset.name}
+                    imageUrl={asset.imageUrl}
+                    price={asset.openingPrice}
+                    highestBid={
+                      !asset.bidAssets[0] ? 0 : asset.bidAssets[0].bidAmount
+                    }
+                    endDate={String(asset.endTime)}
+                  />
+                ))
+              : ""}
           </div>
 
           <div className="flex justify-center my-10">
@@ -122,7 +99,7 @@ export default function AuctionList() {
               <p>Loading ...</p>
             ) : (
               <button
-                onClick={() => handleLoadMore()}
+                onClick={() => loadMoreAssets()}
                 disabled={loading}
                 className="btn-secondary"
               >
