@@ -5,6 +5,7 @@ import axios from 'axios';
 import ItemCard from '@/components/ItemCard';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import useSWR from 'swr';
 
 interface IAsset {
 	id: string;
@@ -16,61 +17,91 @@ interface IAsset {
 }
 export default function AuctionList() {
 	const [assets, setAssets] = useState<IAsset[]>([]);
-	const [loading, setLoading] = useState(false);
+	// const [loading, setLoading] = useState(false);
 	const [page, setPage] = useState(1);
-	const [isInitLoad, setInitLoad] = useState(true);
+	// const [isInitLoad, setInitLoad] = useState(true);
 
 	const search = useSearchParams().get('search');
 
-	async function loadMoreAssets() {
-		setLoading(true);
-		console.log('loadMoreAssets');
+	// async function loadMoreAssets() {
+	// 	setLoading(true);
+	// 	console.log('loadMoreAssets');
+	// 	try {
+	// 		const res = await axios.get(
+	// 			`/api/assets?page=${page}&limit=20${search ? `&search=${search}` : ''}`
+	// 		);
+	// 		const newAssets: IAsset[] = res.data.assets;
+	// 		setAssets((prevAssets) => [...prevAssets, ...newAssets]);
+	// 		setPage((prevPage) => prevPage + 1);
+	// 	} catch (error) {
+	// 		console.error('Error fetching data', error);
+	// 	}
+	// 	setLoading(false);
+	// }
+
+	// async function reloadAssets() {
+	// 	setLoading(true);
+	// 	setPage(1);
+	// 	setAssets([]);
+	// 	try {
+	// 		const res = await axios.get(
+	// 			`/api/assets?page=${page}&limit=10${search ? `&search=${search}` : ''}`
+	// 		);
+
+	// 		const newAssets: IAsset[] = res.data.assets;
+	// 		setAssets((prevAssets) => [...prevAssets, ...newAssets]);
+	// 		setPage((prevPage) => prevPage + 1);
+	// 	} catch (error) {
+	// 		console.error('Error fetching data', error);
+	// 	}
+	// 	setLoading(false);
+	// }
+
+	// useEffect(() => {
+	// 	loadMoreAssets();
+	// }, []);
+
+	// useEffect(() => {
+	// 	reloadAssets();
+	// }, [search]);
+
+	// function handleLoadMore() {
+	// 	loadMoreAssets();
+	// }
+
+	async function fetcher(url: string) {
 		try {
-			const res = await axios.get(
-				`/api/assets?page=${page}&limit=20${search ? `&search=${search}` : ''}`
-			);
-			const newAssets: IAsset[] = res.data.assets;
-			setAssets((prevAssets) => [...prevAssets, ...newAssets]);
-			setPage((prevPage) => prevPage + 1);
+			const res = await axios.get(url);
+			return res.data;
 		} catch (error) {
-			console.error('Error fetching data', error);
+			throw new Error('error fetching data');
 		}
-		setLoading(false);
 	}
 
-	async function reloadAssets() {
-		setLoading(true);
-		try {
-			const res = await axios.get(
-				`/api/assets?page=1&limit=10${search ? `&search=${search}` : ''}`
-			);
+	const targetURL = `/api/assets?page=${page}&limit=10${
+		search ? `&search=${search}` : ''
+	}`;
+	const { data, isLoading, mutate } = useSWR(targetURL, fetcher);
 
-			const newAssets: IAsset[] = res.data.assets;
-			setAssets((prevAssets) => [...prevAssets, ...newAssets]);
-			setPage((prevPage) => prevPage + 1);
-		} catch (error) {
-			console.error('Error fetching data', error);
-		}
-		setLoading(false);
+	function loadMoreAssets() {
+		console.log('loaded more');
+		mutate();
+		const newAssets: IAsset[] = data.assets;
+		setAssets((prevAssets) => [...prevAssets, ...newAssets]);
+		setPage((prevPage) => prevPage + 1);
 	}
 
-	useEffect(() => {
-		loadMoreAssets();
-	}, []);
-
-	useEffect(() => {
-		if (isInitLoad) {
-			return setInitLoad(false);
-		} else {
-			setPage(1);
-			setAssets([]);
-			reloadAssets();
-		}
-	}, [search, isInitLoad]);
-
-	function handleLoadMore() {
-		loadMoreAssets();
+	function reloadAssets() {
+		setPage(1);
+		setAssets([]);
+		mutate();
+		console.log('reloaded');
+		console.log('data:', data);
+		const newAssets: IAsset[] = data.assets;
+		setAssets(data.assets);
+		setPage((prevPage) => prevPage + 1);
 	}
+
 	return (
 		<>
 			<Header />
@@ -97,12 +128,12 @@ export default function AuctionList() {
 						))}
 					</div>
 					<div className="flex justify-center my-10">
-						{loading ? (
+						{isLoading ? (
 							<p>Loading ...</p>
 						) : (
 							<button
-								onClick={handleLoadMore}
-								disabled={loading}
+								onClick={loadMoreAssets}
+								disabled={isLoading}
 								className="btn-secondary"
 							>
 								Load More
