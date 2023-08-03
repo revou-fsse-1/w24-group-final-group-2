@@ -52,7 +52,9 @@ export default function MyBids() {
           assetName={bids.asset.name}
           endTime={bids.asset.endTime}
           bidAmount={bids.bidAmount}
-          currentPrice={bids.currentPrice}
+          highestBid={bids.asset.bidAssets[0].bidAmount}
+          bidderEmail={bids.asset.bidAssets[0].bidder.email}
+          myEmail={session?.user.email.toString()}
         />
       ));
     }

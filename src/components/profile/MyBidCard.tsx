@@ -12,7 +12,9 @@ type MyBidCardProps = {
   assetName: string;
   endTime: string;
   bidAmount: number;
-  currentPrice: number;
+  highestBid: number;
+  bidderEmail: string;
+  myEmail: string;
 };
 
 export default function MyBidCard({
@@ -22,7 +24,9 @@ export default function MyBidCard({
   assetName,
   endTime,
   bidAmount,
-  currentPrice,
+  highestBid,
+  bidderEmail,
+  myEmail,
 }: MyBidCardProps) {
   const [days, hours, mins, secs] = useCountdown(endTime);
   const timeRemaining = days + hours + mins + secs;
@@ -30,23 +34,23 @@ export default function MyBidCard({
   const displayBidStatus = () => {
     if (timeRemaining > 0) {
       return (
-        <div className="w-2/3 min-w-fit p-2 bg-gray-200 rounded-lg border-l-8 border-black md:w-[340px]">
+        <div className="w-2/3 min-w-fit px-3 py-2 bg-gray-200 rounded-lg border-l-8 border-black md:w-[340px]">
           <span>Bidding In Progress</span>
         </div>
       );
     }
 
-    // add checks if user won the bid or lose
-    if (true) {
+    // Check if user won or lose the bid
+    if (bidderEmail == myEmail) {
       return (
-        <div className="w-2/3 min-w-fit p-2 bg-green-200 rounded-lg border-l-8 border-green-800 md:w-[340px]">
-          <span>Bidding Successful</span>
+        <div className="w-2/3 min-w-fit px-3 py-2 bg-green-200 rounded-lg border-l-8 border-green-800 md:w-[340px]">
+          <span>You won the bid!</span>
         </div>
       );
     } else {
       return (
-        <div className="w-2/3 min-w-fit p-2 bg-red-200 rounded-lg border-l-8 border-red-800 md:w-[340px]">
-          <span>Bidding Failed</span>
+        <div className="w-2/3 min-w-fit px-3 py-2 bg-red-200 rounded-lg border-l-8 border-red-800 md:w-[340px]">
+          <span>You lost the bid...</span>
         </div>
       );
     }
@@ -80,9 +84,9 @@ export default function MyBidCard({
           </Link>
         </div>
 
-        <div className="w-5/6 flex flex-col gap-5 justify-between md:flex-row">
-          <div className="flex flex-col gap-5 justify-between md:gap-7">
-            <Link href={`/auctions/${assetId}`}>
+        <div className="flex flex-col gap-5 justify-between md:flex-row md:w-5/6">
+          <div className="flex flex-col gap-5 justify-between md:w-4/6  md:gap-7">
+            <Link href={`/auctions/${assetId}`} className="line-clamp-5 md:line-clamp-2">
               <span className="text-2xl font-bold text-[#203C59] md:text-3xl">
                 {assetName}
               </span>
@@ -96,18 +100,18 @@ export default function MyBidCard({
                 Your Bid: {indonesianCurrency.format(bidAmount)}
               </p>
               <span className="text-xl font-bold">
-                Current Bid: {indonesianCurrency.format(currentPrice)}
+                Highest Bid: {indonesianCurrency.format(highestBid)}
               </span>
             </div>
           </div>
 
-          <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-5 justify-center md:w-2/6 md:items-end">
             <Link href={`/auctions/${assetId}`}>
               <button className="w-fit px-5 py-3 rounded-md text-white bg-[#203C59]">
                 View Asset
               </button>
             </Link>
-            {timeRemaining > 0 ? (
+            {timeRemaining < 0 && bidderEmail == myEmail ? (
               <Link href={`/profile/transactions/checkout/${bidId}`}>
                 <button className="w-fit px-5 py-3 rounded-md bg-[#EAC066]">
                   Proceed to Checkout
