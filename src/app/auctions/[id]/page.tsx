@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { indonesianCurrency } from '@/utils/Currency';
 
 async function fetcher(url: string) {
 	try {
@@ -115,71 +116,94 @@ export default function AuctionPage() {
 	return (
 		<>
 			<Header />
-			<main>
-				<div>
-					<img src={`${data.imageUrl}`} alt="" />
-				</div>
-				<div>
-					<h1>{data.name}</h1>
-					<h2>{data.openingPrice}</h2>
-					<p>{data.description}</p>
-				</div>
-				<div>
-					<div className={`${isSeller ? 'hidden' : ''}`}>
-						<form onSubmit={handleSubmit(onSubmit)}>
-							<input
-								id="auto-bid-check"
-								type="checkbox"
-								checked={isAutoBid}
-								onChange={handleAutoBid}
-							/>
+			<main className="flex flex-col items-center justify-center w-full">
+				<section className="container flex flex-col mx-5 mt-10 md:mx-0">
+					<div className="flex flex-row">
+						<div className="w-1/2">
+							<img src={`${data.imageUrl}`} alt="" />
+						</div>
 
-							<label htmlFor="auto-bid-check">Enable Auto Bid</label>
-							{isAutoBid ? (
-								<input
-									{...register('autoBidValue')}
-									type="input"
-									value={autoBidValue + 100000}
-								/>
-							) : (
-								<input
-									{...register('bidValue')}
-									type="input"
-									placeholder="Please place your bid!"
-									defaultValue={defaultBidInputValue + 100000}
-								/>
-							)}
-
-							<button className="btn-primary" type="submit">
-								Place Bid!
-							</button>
-						</form>
-					</div>
-					<div className="mt-5 nth-child(2):text-red">
-						{!data.bidAssets ? (
-							<p>Be The First to bid!</p>
-						) : (
-							data.bidAssets
-								.slice(-5)
-								.map((bid: IBid) => {
-									return (
-										<>
-											<BidCard
-												key={bid.id}
-												id={bid.id}
-												bidAmount={bid.bidAmount}
-												bidder={bid.bidder}
-												createdAt={bid.createdAt}
+						<div className="flex flex-col w-1/2">
+							<div>
+								<div className={`${isSeller ? 'hidden' : ''} w-full`}>
+									<form
+										onSubmit={handleSubmit(onSubmit)}
+										className="flex flex-col w-full"
+									>
+										<div>
+											<input
+												id="auto-bid-check"
+												type="checkbox"
+												checked={isAutoBid}
+												onChange={handleAutoBid}
+												className="mr-3"
 											/>
-										</>
-									);
-								})
-								.reverse()
-						)}
+											<label htmlFor="auto-bid-check">Enable Auto Bid</label>
+										</div>
+										<div className="flex justify-between">
+											{isAutoBid ? (
+												<input
+													{...register('autoBidValue')}
+													type="input"
+													value={autoBidValue + 100000}
+													className="w-full pl-10 mr-5 text-xl bg-mkl-neutral rounded-xl max-h-[60px]"
+												/>
+											) : (
+												<input
+													{...register('bidValue')}
+													type="input"
+													placeholder="Please place your bid!"
+													defaultValue={indonesianCurrency.format(
+														defaultBidInputValue + 100000
+													)}
+													className="w-full pl-10 mr-5 text-xl bg-mkl-neutral rounded-xl max-h-[60px]"
+												/>
+											)}
 
-						{}
+											<button
+												className="max-h-[60px] w-1/3 btn-primary"
+												type="submit"
+											>
+												Place Bid!
+											</button>
+										</div>
+									</form>
+								</div>
+								<div className="mt-5">
+									{!data.bidAssets ? (
+										<p>Be The First to bid!</p>
+									) : (
+										data.bidAssets
+											.slice(-5)
+											.map((bid: IBid) => {
+												return (
+													<>
+														<BidCard
+															key={bid.id}
+															id={bid.id}
+															bidAmount={bid.bidAmount}
+															bidder={bid.bidder}
+															createdAt={bid.createdAt}
+														/>
+													</>
+												);
+											})
+											.reverse()
+									)}
+
+									{}
+								</div>
+							</div>
+						</div>
 					</div>
-				</div>
+					<div className="px-20 mt-10">
+						<h2 className="h2">{data.name}</h2>
+						<h3 className="mt-3 h3">
+							{indonesianCurrency.format(data.openingPrice)}
+						</h3>
+						<p className="my-10 ">{data.description}</p>
+					</div>
+				</section>
 			</main>
 			<Footer />
 		</>

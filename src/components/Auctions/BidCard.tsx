@@ -34,7 +34,7 @@ export default function BidCard({ bidAmount, bidder, createdAt }: IBid) {
 	const date = getDate(createdAt);
 	const time = getTime(createdAt);
 	return (
-		<div className="flex flex-row items-center justify-between w-full px-5 py-2 bg-mkl-accent text-mkl-secondary rounded-xl">
+		<div className="flex flex-row items-center justify-between w-full px-5 py-2 mt-3 bg-mkl-accent text-mkl-secondary rounded-xl">
 			<p className="text-lg">{bidder.name}</p>
 			<div>
 				<small>
