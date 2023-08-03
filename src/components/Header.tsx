@@ -40,7 +40,6 @@ export default function Header() {
 	const searchAuctionList = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		const targetUrl = `/auctions?page=1&limit=10=&search=${searchInput}`;
 		if (e.key == 'Enter') {
-			// router.push(targetUrl);
 			window.location.replace(targetUrl);
 		}
 	};
@@ -67,9 +66,14 @@ export default function Header() {
 				onClick={() => setDisplayDropdownMenu((prev) => !prev)}
 				className="flex items-center gap-2 text-left min-w-fit"
 			>
-				<div className="flex items-center gap-3">
+				<div className="flex items-center gap-2">
 					<div className="min-w-fit">
 						<IconAvatar size={30} />
+					</div>
+					<div>
+						<span className="font-bold">
+							{session?.user?.name.split(' ')[0]}
+						</span>
 					</div>
 				</div>
 				<div className={displayDropdownMenu ? 'rotate-180' : 'rotate-0'}>
@@ -106,7 +110,7 @@ export default function Header() {
 						<Link href={'/auctions'}>
 							<button>Auctions</button>
 						</Link>
-            <Link href={'/profile/registerAsset'}>
+						<Link href={'/profile/registerAsset'}>
 							<button>Register Asset</button>
 						</Link>
 						{handleLoginDisplay()}
