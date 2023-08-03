@@ -40,7 +40,8 @@ export default function Header() {
 	const searchAuctionList = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		const targetUrl = `/auctions?page=1&limit=10=&search=${searchInput}`;
 		if (e.key == 'Enter') {
-			router.push(targetUrl);
+			// router.push(targetUrl);
+			window.location.replace(targetUrl);
 		}
 	};
 
