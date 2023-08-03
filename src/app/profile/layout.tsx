@@ -12,8 +12,7 @@ export default function ProfileLayout({
   return (
     <div className="min-h-screen flex flex-col items-center justify-between">
       <Header />
-
-      {children}
+      <div className="w-full max-w-7xl flex grow">{children}</div>
 
       <MobileNav />
       <Footer />

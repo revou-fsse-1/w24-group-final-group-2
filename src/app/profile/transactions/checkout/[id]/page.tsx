@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { redirect, useRouter } from "next/navigation";
 import useSWR from "swr";
 import { useState } from "react";
+import IconWarning from "@/components/icons/IconWarning";
 
 const deliveryCost = 500000;
 
@@ -19,6 +20,7 @@ export default function TransactionCheckout({
   const router = useRouter();
   const { data: session, status } = useSession();
   const [disableSubmit, setDisableSubmit] = useState(false);
+  const [displayCreditError, setDisplayCreditError] = useState(false);
 
   if (status == "unauthenticated") {
     redirect("/login");
@@ -34,13 +36,86 @@ export default function TransactionCheckout({
       .catch((error) => {
         throw new Error("Failed fetching data");
       });
-  const user = useSWR(`/api/users/${session?.user?.email}`, fetchData);
-  const bidAsset = useSWR(`/api/users/bids/${params.id}`, fetchData);
+  const { data, isLoading } = useSWR(`/api/users/bids/${params.id}`, fetchData);
+
+  if (!isLoading) {
+    console.log(data);
+  }
+
+  // Handles the display of payment button
+  const displayPaymentButton = () => {
+    const missingDeliveryDetails =
+      !data.bidder.name || !data.bidder.address || !data.bidder.phoneNumber;
+
+    return disableSubmit ? (
+      <button
+        disabled
+        className="w-fit px-8 py-3 rounded-md bg-[#EAC066] opacity-40"
+      >
+        Confirm Payment
+      </button>
+    ) : missingDeliveryDetails ? (
+      <>
+        <div className="flex items-center gap-2 px-3 py-2 bg-red-200 rounded-lg border-l-8 border-red-800">
+          <div className="min-h-fit">
+            <IconWarning size={30} />
+          </div>
+          <span>
+            Missing delivery details - Please fill in your delivery details on
+            the Profile page
+          </span>
+        </div>
+        <button
+          disabled
+          className="w-fit px-8 py-3 rounded-md bg-[#EAC066] opacity-40"
+        >
+          Confirm Payment
+        </button>
+      </>
+    ) : (
+      <div className="flex flex-col gap-2 items-end">
+        <button
+          onClick={() => handlePayment()}
+          className="w-fit px-8 py-3 rounded-md bg-[#EAC066]"
+        >
+          Confirm Payment
+        </button>
+        {displayCreditError ? (
+          <span className="text-red-500">Not enough credits</span>
+        ) : (
+          ""
+        )}
+      </div>
+    );
+  };
 
   // Handle submit
-  const handlePayment = () => {
+  const handlePayment = async () => {
+    const totalPrice: number =
+      data.bidAmount + data.bidAmount / 10 + deliveryCost;
+
+    if (data.bidder.creditAmount < totalPrice) {
+      setDisplayCreditError(true);
+      return;
+    }
+
     setDisableSubmit(true);
-    console.log("Payment Successful");
+    setDisplayCreditError(false);
+
+    try {
+      const response = await axios.post("/api/users/transactions", {
+        assetId: data.asset.id,
+        bidderId: data.id,
+        price: totalPrice,
+        statusPaid: "paid",
+      });
+
+      console.log(response);
+      console.log("Payment Successful");
+    } catch (error) {
+      console.log(error);
+      throw new Error("Failed to create transaction");
+    }
   };
 
   return (
@@ -54,37 +129,37 @@ export default function TransactionCheckout({
           <div className="w-full flex flex-col gap-6 pr-6 pb-6 border-b-2 md:w-1/2 md:pb-0 md:border-b-0 md:border-r-2">
             <div className="flex flex-col gap-1">
               <h2>Asset Name:</h2>
-              {!bidAsset.data || !user.data ? (
+              {!data ? (
                 <p className="font-bold opacity-40">...</p>
               ) : (
-                <p className="font-bold">{bidAsset.data.asset.name}</p>
+                <p className="font-bold">{data.asset.name}</p>
               )}
             </div>
 
             <div className="flex flex-col gap-1">
               <h2>Received By:</h2>
-              {!bidAsset.data || !user.data ? (
+              {!data || !data.bidder.name ? (
                 <p className="font-bold opacity-40">...</p>
               ) : (
-                <p className="font-bold">{user.data.name}</p>
+                <p className="font-bold">{data.bidder.name}</p>
               )}
             </div>
 
             <div className="flex flex-col gap-1">
               <h2>Deliver To:</h2>
-              {!bidAsset.data || !user.data ? (
+              {!data || !data.bidder.address ? (
                 <p className="font-bold opacity-40">...</p>
               ) : (
-                <p className="font-bold">{user.data.address}</p>
+                <p className="font-bold">{data.bidder.address}</p>
               )}
             </div>
 
             <div className="flex flex-col gap-1">
               <h2>Phone Number:</h2>
-              {!bidAsset.data || !user.data ? (
+              {!data || !data.bidder.phoneNumber ? (
                 <p className="font-bold opacity-40">...</p>
               ) : (
-                <p className="font-bold">{user.data.phoneNumber}</p>
+                <p className="font-bold">{data.bidder.phoneNumber}</p>
               )}
             </div>
           </div>
@@ -93,27 +168,27 @@ export default function TransactionCheckout({
             <div className="w-full flex flex-col gap-3">
               <div className="flex flex-col gap-1 md:flex-row md:justify-between">
                 <h2>Final Bid Price:</h2>
-                {!bidAsset.data || !user.data ? (
+                {!data ? (
                   <p className="font-bold opacity-40">...</p>
                 ) : (
                   <p className="font-bold">
-                    {indonesianCurrency.format(bidAsset.data.currentPrice)}
+                    {indonesianCurrency.format(data.bidAmount)}
                   </p>
                 )}
               </div>
               <div className="flex flex-col gap-1 md:flex-row md:justify-between">
                 <h2>Service Charge (10%):</h2>
-                {!bidAsset.data || !user.data ? (
+                {!data ? (
                   <p className="font-bold opacity-40">...</p>
                 ) : (
                   <p className="font-bold">
-                    {indonesianCurrency.format(bidAsset.data.currentPrice / 10)}
+                    {indonesianCurrency.format(data.bidAmount / 10)}
                   </p>
                 )}
               </div>
               <div className="flex flex-col gap-1 md:flex-row md:justify-between">
                 <h2>Delivery Cost:</h2>
-                {!bidAsset.data || !user.data ? (
+                {!data ? (
                   <p className="font-bold opacity-40">...</p>
                 ) : (
                   <p className="font-bold">
@@ -126,14 +201,12 @@ export default function TransactionCheckout({
             <div className="w-full flex flex-col">
               <div className="flex flex-col gap-1 md:flex-row md:justify-between">
                 <h2>Total Cost:</h2>
-                {!bidAsset.data || !user.data ? (
+                {!data ? (
                   <p className="text-2xl font-bold opacity-40">...</p>
                 ) : (
                   <p className="text-2xl font-bold">
                     {indonesianCurrency.format(
-                      bidAsset.data.currentPrice +
-                        bidAsset.data.currentPrice / 10 +
-                        deliveryCost
+                      data.bidAmount + data.bidAmount / 10 + deliveryCost
                     )}
                   </p>
                 )}
@@ -150,28 +223,12 @@ export default function TransactionCheckout({
           </button>
         </Link>
 
-        {!user.data || !bidAsset.data ? (
-          <div className="w-1/3 p-3">
+        {!data ? (
+          <div className="w-fit p-3">
             <LoadingSpinner />
           </div>
         ) : (
-          <>
-            {disableSubmit ? (
-              <button
-                disabled
-                className="w-fit px-8 py-3 rounded-md bg-[#EAC066] opacity-40"
-              >
-                Confirm Payment
-              </button>
-            ) : (
-              <button
-                onClick={() => handlePayment()}
-                className="w-fit px-8 py-3 rounded-md bg-[#EAC066]"
-              >
-                Confirm Payment
-              </button>
-            )}
-          </>
+          displayPaymentButton()
         )}
       </div>
     </div>

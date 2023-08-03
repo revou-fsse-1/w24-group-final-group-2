@@ -50,7 +50,8 @@ export default function Transactions() {
           key={transaction.id}
           imageUrl={transaction.assets.imageUrl}
           assetName={transaction.assets.name}
-          currentPrice={transaction.bidder.currentPrice}
+          bidAmount={transaction.bidder.bidAmount}
+          totalPrice={transaction.price}
         />
       ));
     }

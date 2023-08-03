@@ -6,13 +6,15 @@ import Image from "next/image";
 type TransactionCardProps = {
   imageUrl: string;
   assetName: string;
-  currentPrice: number;
+  bidAmount: number;
+  totalPrice: number;
 };
 
 export default function TransactionCard({
   imageUrl,
   assetName,
-  currentPrice,
+  bidAmount,
+  totalPrice,
 }: TransactionCardProps) {
   return (
     <div className="w-full flex flex-col gap-7">
@@ -38,10 +40,10 @@ export default function TransactionCard({
 
             <div className="flex flex-col gap-1">
               <p className="font-bold">
-                Final Bid Price: {indonesianCurrency.format(currentPrice)}
+                Final Bid Price: {indonesianCurrency.format(bidAmount)}
               </p>
               <span className="text-xl font-bold">
-                Total Paid Price: {indonesianCurrency.format(currentPrice)}
+                Total Paid Price: {indonesianCurrency.format(totalPrice)}
               </span>
             </div>
           </div>
