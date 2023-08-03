@@ -54,14 +54,18 @@ export default function AuctionPage() {
 	async function handleSubmit() {
 		//check if there is any bid done
 		if (data.bidAssets.length > 0) {
-			console.log('data.bidAssets:', data.bidAssets.length < 1);
 			const length = data.bidAssets.length - 1;
-			//check if value is bigger than the highest bid
-			if (data.bidAssets[length].bidAmount < bidAmountValue) {
-				//create it
-				doPost();
+			//check if the last bidder is the user
+			if ((data.bidAssets[length].userId = session?.user.id)) {
+				//check if value is bigger than the highest bid
+				if (data.bidAssets[length].bidAmount < bidAmountValue) {
+					//create it
+					doPost();
+				} else {
+					alert('bid must be higher than current Price');
+				}
 			} else {
-				alert('bid must be higher than current Price');
+				alert('You are the highest biddder');
 			}
 		} else {
 			// check if the value is bigger than the opening price
