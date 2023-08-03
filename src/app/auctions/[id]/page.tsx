@@ -29,6 +29,8 @@ export default function AuctionPage() {
 		{ refreshInterval: 500 }
 	);
 
+	console.log('data:', data);
+
 	async function doPost() {
 		await axios.post(
 			'/api/bids',
@@ -49,31 +51,53 @@ export default function AuctionPage() {
 	if (isLoading) {
 		return <div>loading...</div>;
 	}
+
+	if (error) {
+		return <div>Fail to fetch data</div>;
+	}
 	const length = data.bidAssets.length - 1;
 	const isSeller = data.sellerId === session?.user.id;
 	async function handleSubmit() {
-		//check if there is any bid done
+		// //check if there is any bid done
+		// if (data.bidAssets.length > 0) {
+		// 	//check if the last bidder is the user
+		// 	if (data.bidAssets[length].userId !== session?.user.id) {
+		// 		//check if value is bigger than the highest bid
+		// 		if (data.bidAssets[length].bidAmount < bidAmountValue) {
+		// 			//create it
+		// 			doPost();
+		// 		} else {
+		// 			alert('bid must be higher than current Price');
+		// 		}
+		// 	} else {
+		// 		alert('You are the highest biddder');
+		// 	}
+		// } else {
+		// 	// check if the value is bigger than the opening price
+		// 	if (data.openingPrice < bidAmountValue) {
+		// 		doPost();
+		// 	} else {
+		// 		alert('bid must be higher than opening price');
+		// 	}
+		// }
+		const lastBid = data.bidAssets[length];
 		if (data.bidAssets.length > 0) {
-			//check if the last bidder is the user
-			if ((data.bidAssets[length].userId = session?.user.id)) {
-				//check if value is bigger than the highest bid
-				if (data.bidAssets[length].bidAmount < bidAmountValue) {
-					//create it
-					doPost();
-				} else {
-					alert('bid must be higher than current Price');
+			if (lastBid.userId !== session?.user.id) {
+				if (lastBid.bidAmount > bidAmountValue) {
+					alert('Bid must be higher than current price');
+					return;
 				}
 			} else {
-				alert('You are the highest biddder');
+				alert('you re the highest bidder');
+				return;
 			}
 		} else {
-			// check if the value is bigger than the opening price
-			if (data.openingPrice < bidAmountValue) {
-				doPost();
-			} else {
+			if (data.openingPrice > bidAmountValue) {
 				alert('bid must be higher than opening price');
+				return;
 			}
 		}
+		doPost();
 	}
 
 	return (
