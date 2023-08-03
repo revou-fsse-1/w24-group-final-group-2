@@ -71,8 +71,6 @@ export default function EditAsset({ params }: { params: { id: string } }) {
         endTime: formatDate,
       });
 
-      console.log(response);
-      console.log("---UPDATE ASSET SUCCESS---");
       router.push("/profile/myAssets");
     } catch (error) {
       setDisableSubmit(false);
@@ -86,8 +84,6 @@ export default function EditAsset({ params }: { params: { id: string } }) {
       setDisableSubmit(true);
       const response = await axios.delete(`/api/users/assets/${params.id}`);
 
-      console.log(response);
-      console.log("!!! DELETED ASSET !!!");
       router.push("/profile/myAssets");
     } catch (error) {
       setDisableSubmit(false);

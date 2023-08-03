@@ -26,10 +26,6 @@ export default function MyBids() {
       });
   const { data, isLoading } = useSWR("/api/users/bids/", fetchData);
 
-  if (!isLoading) {
-    console.log(data);
-  }
-
   const displayMyBids = () => {
     if (data.length == 0) {
       return (

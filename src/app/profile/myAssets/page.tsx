@@ -26,10 +26,6 @@ export default function MyAssets() {
       });
   const { data, isLoading } = useSWR("/api/users/assets", fetchData);
 
-  if (!isLoading) {
-    console.log(data);
-  }
-
   const displayMyAssets = () => {
     if (data.length == 0) {
       return (
