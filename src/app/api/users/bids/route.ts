@@ -6,7 +6,6 @@ import { authOptions } from "../../auth/[...nextauth]/route";
 export async function GET() {
   const session = await getServerSession(authOptions);
 
-  // Get user bids list - BAKAL DIPAKAI
   const userBidList = await prisma.user.findFirst({
     where: {
       email: session?.user?.email?.toString(),
@@ -16,6 +15,7 @@ export async function GET() {
         select: {
           id: true,
           bidAmount: true,
+          transaction: true,
           asset: {
             select: {
               id: true,
