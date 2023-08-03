@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/libs/db';
+import { Prisma } from '@prisma/client';
 
 // export async function GET() {
 // 	const asset = await prisma.asset.findMany();
@@ -15,17 +16,17 @@ export async function GET(req: NextRequest) {
 	const pageNumber = parseInt(page as string);
 	const perPageNumber = parseInt(limit as string);
 	try {
-		const whereClause = {
+		const whereClause: Prisma.AssetWhereInput = {
 			OR: [
 				{
 					name: {
-						contains: search,
+						contains: `${search}`,
 						mode: 'insensitive',
 					},
 				},
 				{
 					description: {
-						contains: search,
+						contains: `${search}`,
 						mode: 'insensitive',
 					},
 				},
