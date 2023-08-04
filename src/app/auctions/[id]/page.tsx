@@ -177,17 +177,15 @@ export default function AuctionPage() {
 									) : (
 										data.bidAssets
 											.slice(-5)
-											.map((bid: IBid) => {
+											.map((bid: IBid, index: number) => {
 												return (
-													<>
-														<BidCard
-															key={bid.id}
-															id={bid.id}
-															bidAmount={bid.bidAmount}
-															bidder={bid.bidder}
-															createdAt={bid.createdAt}
-														/>
-													</>
+													<BidCard
+														key={index}
+														id={bid.id}
+														bidAmount={bid.bidAmount}
+														bidder={bid.bidder}
+														createdAt={bid.createdAt}
+													/>
 												);
 											})
 											.reverse()
