@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer components {
+  div.bid-card:nth-child(6) {
+		@apply bg-opacity-20;
+	}
 	div.bid-card:nth-child(5) {
 		@apply bg-opacity-20;
 	}
