@@ -4,16 +4,16 @@
 
 @layer components {
 	div.bid-card:nth-child(5) {
-		@apply opacity-20;
+		@apply bg-opacity-20;
 	}
 	div.bid-card:nth-child(4) {
-		@apply opacity-40;
+		@apply bg-opacity-40;
 	}
 	div.bid-card:nth-child(3) {
-		@apply opacity-60;
+		@apply bg-opacity-60;
 	}
 	div.bid-card:nth-child(2) {
-		@apply opacity-80;
+		@apply bg-opacity-80;
 	}
 
   .btn-primary {

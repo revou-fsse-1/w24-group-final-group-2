@@ -1,50 +1,49 @@
-import { indonesianCurrency } from '@/utils/Currency';
+import { indonesianCurrency } from "@/utils/Currency";
 
 interface IBidder {
-	name: string;
+  name: string;
 }
 export interface IBid {
-	id: string;
-	bidAmount: number;
-	// bidderName: string;
-	createdAt: Date;
-	bidder: IBidder;
+  id: string;
+  bidAmount: number;
+  createdAt: Date;
+  bidder: IBidder;
 }
 
 export default function BidCard({ bidAmount, bidder, createdAt }: IBid) {
-	function getDate(date: Date) {
-		const newDate = new Date(date);
-		return newDate.toLocaleString('en-GB', {
-			weekday: 'short',
-			day: 'numeric',
-			month: 'short',
-			year: 'numeric',
-		});
-	}
+  function getDate(date: Date) {
+    const newDate = new Date(date);
+    return newDate.toLocaleString("en-GB", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  }
 
-	function getTime(time: Date) {
-		const newTime = new Date(time);
-		return newTime.toLocaleString('en-GB', {
-			hour: 'numeric',
-			minute: 'numeric',
-			second: 'numeric',
-			timeZoneName: 'short',
-		});
-	}
-	const date = getDate(createdAt);
-	const time = getTime(createdAt);
-	return (
-		<div className="flex flex-row items-center justify-between w-full px-5 py-2 mt-3 bid-card bg-mkl-accent text-mkl-secondary rounded-xl">
-			<p className="text-lg">{bidder.name}</p>
-			<div>
-				<small>
-					{date}
-					<br />
-				</small>
-				<b>{time}</b>
-			</div>
+  function getTime(time: Date) {
+    const newTime = new Date(time);
+    return newTime.toLocaleString("en-GB", {
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      timeZoneName: "short",
+    });
+  }
 
-			<p>{indonesianCurrency.format(bidAmount)}</p>
-		</div>
-	);
+  const date = getDate(createdAt);
+  const time = getTime(createdAt);
+
+  return (
+    <div className="flex flex-col items-center justify-between gap-3 w-full px-4 py-2 bid-card bg-mkl-accent text-mkl-secondary rounded-xl sm:flex-row">
+      <p>{bidder.name}</p>
+
+      <div className="flex flex-col items-center text-center">
+        <small>{date}</small>
+        <p>{time}</p>
+      </div>
+
+      <p className="font-bold">{indonesianCurrency.format(bidAmount)}</p>
+    </div>
+  );
 }
