@@ -106,6 +106,7 @@ export default function TransactionCheckout({
         statusPaid: "paid",
       });
 
+      window.location.replace("/profile/transactions");
     } catch (error) {
       throw new Error("Failed to create transaction");
     }

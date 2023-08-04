@@ -116,7 +116,7 @@ export default function MyBidCard({
                 View Asset
               </button>
             </Link>
-            {timeRemaining < 0 && bidderEmail == myEmail && !hasTransaction ? (
+            {timeRemaining < 0 && bidderEmail == myEmail && bidAmount == highestBid && !hasTransaction ? (
               <Link href={`/profile/transactions/checkout/${bidId}`}>
                 <button className="w-fit px-5 py-3 rounded-md bg-[#EAC066]">
                   Proceed to Checkout
