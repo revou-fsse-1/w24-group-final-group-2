@@ -3,7 +3,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import useSWR from 'swr';
 import { useSession } from 'next-auth/react';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import axios from 'axios';
 import BidCard, { IBid } from '@/components/Auctions/BidCard';
 import { useEffect, useState } from 'react';
@@ -27,13 +27,14 @@ export default function AuctionPage() {
 	const [isAutoBid, setAutoBid] = useState<boolean>(false);
 	const { data: session } = useSession();
 	const params = useParams();
+	const pathname = usePathname();
+
 	const { data, error, isLoading } = useSWR(
 		`/api/assets/${params.id}`,
 		fetcher,
 		{ refreshInterval: 500 }
 	);
 	const assetData = data;
-
 	const schema = yup.object({
 		bidValue: yup.number(),
 		autoBidValue: yup.number(),
@@ -55,9 +56,11 @@ export default function AuctionPage() {
 	}
 
 	const length =
-		data.bidAssets.length === undefined ? 0 : data.bidAssets.length - 1;
-	const isSeller = data.sellerId === session?.user.id;
-	const lastBid = data.bidAssets[length];
+		assetData.bidAssets.length === undefined
+			? 0
+			: assetData.bidAssets.length - 1;
+	const isSeller = assetData.sellerId === session?.user.id;
+	const lastBid = assetData.bidAssets[length];
 	const defaultBidInputValue =
 		lastBid === undefined ? assetData.openingPrice : lastBid.bidAmount;
 
@@ -76,6 +79,7 @@ export default function AuctionPage() {
 				},
 			}
 		);
+		window.location.replace(pathname);
 	}
 
 	async function onSubmit(data: any) {
@@ -145,6 +149,7 @@ export default function AuctionPage() {
 													{...register('autoBidValue')}
 													type="input"
 													value={autoBidValue + 100000}
+													readOnly={true}
 													className="w-full pl-10 mr-2 text-lg bg-mkl-neutral rounded-xl max-h-[60px]"
 												/>
 											) : (
