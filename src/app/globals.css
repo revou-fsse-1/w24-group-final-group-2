@@ -3,6 +3,19 @@
 @tailwind utilities;
 
 @layer components {
+	div.bid-card:nth-child(5) {
+		@apply opacity-20;
+	}
+	div.bid-card:nth-child(4) {
+		@apply opacity-40;
+	}
+	div.bid-card:nth-child(3) {
+		@apply opacity-60;
+	}
+	div.bid-card:nth-child(2) {
+		@apply opacity-80;
+	}
+
   .btn-primary {
     @apply px-9 py-4 border-2 rounded-xl text-mkl-secondary border-mkl-secondary bg-mkl-primary transition-all duration-200;
   }
@@ -34,4 +47,7 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+}
+
+div.bid-card:nth-child(5) {
 }
