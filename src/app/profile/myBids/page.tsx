@@ -51,7 +51,7 @@ export default function MyBids() {
           highestBid={bids.asset.bidAssets[0].bidAmount}
           bidderEmail={bids.asset.bidAssets[0].bidder.email}
           myEmail={session?.user.email.toString()}
-          hasTransaction={!bids.transaction ? false : true}
+          hasTransaction={bids.transaction.length == 0 ? false : true}
         />
       ));
     }
