@@ -13,6 +13,7 @@ import * as yup from "yup";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { indonesianCurrency } from "@/utils/Currency";
 import { useState } from "react";
+import { useCountdown } from "@/utils/useCountDown";
 
 export default function AuctionPage() {
   const { data: session, status } = useSession();
@@ -31,8 +32,7 @@ export default function AuctionPage() {
 
   const { data, error, isLoading } = useSWR(
     `/api/assets/${params.id}`,
-    fetcher,
-    { refreshInterval: 500 }
+    fetcher
   );
 
   const schema = yup.object({
@@ -68,20 +68,10 @@ export default function AuctionPage() {
     mode: "onTouched",
   });
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-between">
-        <Header />
-        <main className="flex grow flex-col items-center justify-center w-full">
-          <div className="flex flex-col items-center gap-3">
-            <LoadingSpinner />
-            Loading Asset ...
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+  const [days, hours, mins, secs] = useCountdown(
+    !isLoading ? String(data.endTime) : new Date().toISOString()
+  );
+  const timeRemaining = days + hours + mins + secs;
 
   async function onSubmit(data: any) {
     try {
@@ -108,7 +98,18 @@ export default function AuctionPage() {
     }
   }
 
-  return (
+  return isLoading ? (
+    <div className="min-h-screen flex flex-col items-center justify-between">
+      <Header />
+      <main className="flex grow flex-col items-center justify-center w-full">
+        <div className="flex flex-col items-center gap-3">
+          <LoadingSpinner />
+          Loading Asset ...
+        </div>
+      </main>
+      <Footer />
+    </div>
+  ) : (
     <div className="min-h-screen flex flex-col items-center justify-between">
       <Header />
       <main className="w-full max-w-7xl p-6 mt-8 flex flex-col items-center justify-center">
@@ -139,7 +140,7 @@ export default function AuctionPage() {
                         className="w-full p-3 text-lg bg-mkl-neutral bg-opacity-30 rounded-xl border-2 border-gray-500 sm:w-2/3"
                       />
 
-                      {disableSubmit ? (
+                      {disableSubmit || timeRemaining <= 0 ? (
                         <button
                           className="w-full btn-primary sm:w-1/3 opacity-40"
                           disabled
@@ -199,6 +200,20 @@ export default function AuctionPage() {
             <h2 className="text-3xl font-bold text-[#203C59] md:text-4xl">
               {data.name}
             </h2>
+            <div className="flex flex-col gap-3 py-4 border-t-2">
+              <span className="w-1/3 min-w-[220px] border-l-8 border-[#203C59] px-3 py-2 rounded-lg bg-gray-200">
+                Time Left:
+              </span>
+              {timeRemaining <= 0 ? (
+                <h3 className="text-3xl md:text-4xl">
+                  {`- Days - Hours - Minutes - Secs`}
+                </h3>
+              ) : (
+                <h3 className="text-3xl md:text-4xl">
+                  {`${days} Days ${hours} Hours ${mins} Minutes ${secs} Secs`}
+                </h3>
+              )}
+            </div>
             <div className="flex flex-col gap-3 py-4 border-t-2">
               <span className="w-1/3 min-w-[220px] border-l-8 border-[#203C59] px-3 py-2 rounded-lg bg-gray-200">
                 Opening Price:
