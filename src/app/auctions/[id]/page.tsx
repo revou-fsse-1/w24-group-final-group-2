@@ -23,8 +23,8 @@ async function fetcher(url: string) {
 }
 
 export default function AuctionPage() {
-	const [autoBidValue, setAutoBidValue] = useState<number>(0);
-	const [isAutoBid, setAutoBid] = useState<boolean>(false);
+	const [errorMessage, setErrorMessage] = useState('');
+	const [isError, setIsError] = useState<boolean>(false);
 	const { data: session } = useSession();
 	const params = useParams();
 	const pathname = usePathname();
@@ -37,7 +37,6 @@ export default function AuctionPage() {
 	const assetData = data;
 	const schema = yup.object({
 		bidValue: yup.number(),
-		autoBidValue: yup.number(),
 	});
 	const {
 		register,
@@ -83,36 +82,32 @@ export default function AuctionPage() {
 	}
 
 	async function onSubmit(data: any) {
-		const bidAmountValue = isAutoBid ? data.autoBidValue : data.bidValue;
+		const bidAmountValue = data.bidValue;
 		if (session) {
 			if (lastBid.userId !== session?.user.id) {
 				if (assetData.openingPrice < bidAmountValue) {
 					if (lastBid.bidAmount < bidAmountValue) {
 						doPost(bidAmountValue);
+						setIsError(false);
 					} else {
-						alert('bid must be higher than the current price');
+						setIsError(true);
+						setErrorMessage('bid must be higher than the current price');
 						return;
 					}
 				} else {
-					alert('bid must be higher than opening price');
+					setIsError(true);
+					setErrorMessage('bid must be higher than opening price');
 					return;
 				}
 			} else {
-				alert('you are the highest bidder');
+				setIsError(true);
+				setErrorMessage('you are the highest bidder');
 				return;
 			}
 		} else {
-			alert('please login');
+			setIsError(true);
+			setErrorMessage('please login');
 			return;
-		}
-	}
-
-	function handleAutoBid(event: React.ChangeEvent<HTMLInputElement>) {
-		setAutoBid(event.target.checked);
-		if (lastBid === undefined) {
-			setAutoBidValue(assetData.openingPrice);
-		} else {
-			setAutoBidValue(lastBid.bidAmount);
 		}
 	}
 
@@ -133,34 +128,14 @@ export default function AuctionPage() {
 										onSubmit={handleSubmit(onSubmit)}
 										className="flex flex-col w-full"
 									>
-										<div>
-											<input
-												id="auto-bid-check"
-												type="checkbox"
-												checked={isAutoBid}
-												onChange={handleAutoBid}
-												className="mr-3"
-											/>
-											<label htmlFor="auto-bid-check">Enable Auto Bid</label>
-										</div>
 										<div className="flex justify-between">
-											{isAutoBid ? (
-												<input
-													{...register('autoBidValue')}
-													type="input"
-													value={autoBidValue + 100000}
-													readOnly={true}
-													className="w-full pl-10 mr-2 text-lg bg-mkl-neutral rounded-xl max-h-[60px]"
-												/>
-											) : (
-												<input
-													{...register('bidValue')}
-													type="input"
-													placeholder="Please place your bid!"
-													defaultValue={defaultBidInputValue + 100000}
-													className="w-full pl-10 mr-2 text-lg bg-mkl-neutral rounded-xl max-h-[60px]"
-												/>
-											)}
+											<input
+												{...register('bidValue')}
+												type="input"
+												placeholder="Please place your bid!"
+												defaultValue={defaultBidInputValue + 100000}
+												className="w-full pl-10 mr-2 text-lg bg-mkl-neutral rounded-xl min-h-[40px]"
+											/>
 
 											<button
 												className="max-h-[60px] w-8/12  md:w-10/12 lg:w-7/12 btn-primary"
@@ -169,6 +144,9 @@ export default function AuctionPage() {
 												Place Bid!
 											</button>
 										</div>
+										<span className="mt-2 text-sm text-red-600">
+											{errorMessage}
+										</span>
 									</form>
 								</div>
 								<div className="mt-5" id="bid-list-container">
