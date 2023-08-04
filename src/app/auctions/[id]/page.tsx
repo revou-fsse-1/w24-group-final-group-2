@@ -14,7 +14,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import { indonesianCurrency } from "@/utils/Currency";
 
 export default function AuctionPage() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const params = useParams();
   const pathname = usePathname();
 
@@ -43,7 +43,12 @@ export default function AuctionPage() {
           ? data.openingPrice + 1
           : data.bidAssets[data.bidAssets.length - 1].bidAmount + 1,
         "Bid must be higher than current price or bid"
-      ),
+      )
+      .test({
+        name: "is-authenticated",
+        test: () => status == "authenticated",
+        message: "You must be logged in to bid",
+      }),
   });
   const {
     register,
