@@ -79,13 +79,12 @@ export default function AuctionPage() {
 	}
 
 	async function onSubmit(data: any) {
-		const bidAmountValue = data.bidValue;
-
+		const bidAmountValue = isAutoBid ? data.autoBidValue : data.bidValue;
 		if (session) {
 			if (lastBid.userId !== session?.user.id) {
 				if (assetData.openingPrice < bidAmountValue) {
 					if (lastBid.bidAmount < bidAmountValue) {
-						console.log('done');
+						doPost(bidAmountValue);
 					} else {
 						alert('bid must be higher than the current price');
 						return;
@@ -153,9 +152,7 @@ export default function AuctionPage() {
 													{...register('bidValue')}
 													type="input"
 													placeholder="Please place your bid!"
-													defaultValue={indonesianCurrency.format(
-														defaultBidInputValue + 100000
-													)}
+													defaultValue={defaultBidInputValue + 100000}
 													className="w-full pl-10 mr-5 text-xl bg-mkl-neutral rounded-xl max-h-[60px]"
 												/>
 											)}
@@ -169,7 +166,7 @@ export default function AuctionPage() {
 										</div>
 									</form>
 								</div>
-								<div className="mt-5">
+								<div className="mt-5" id="bid-list-container">
 									{!data.bidAssets ? (
 										<p>Be The First to bid!</p>
 									) : (
