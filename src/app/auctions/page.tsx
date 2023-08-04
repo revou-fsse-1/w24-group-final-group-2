@@ -48,8 +48,6 @@ export default function AuctionList() {
         `/api/assets?page=1&limit=10${search ? `&search=${search}` : ""}`
       );
 
-      console.log(res.data.assets);
-
       const newAssets: IAsset[] = res.data.assets;
       setAssets((prevAssets: any) => [...prevAssets, ...newAssets]);
       setPage((prevPage) => prevPage + 1);
