@@ -187,8 +187,6 @@ export default function AuctionPage() {
 											})
 											.reverse()
 									)}
-
-									{}
 								</div>
 							</div>
 						</div>
