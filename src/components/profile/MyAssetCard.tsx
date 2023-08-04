@@ -5,6 +5,7 @@ import { indonesianCurrency } from "@/utils/Currency";
 import Image from "next/image";
 import { useCountdown } from "@/utils/useCountDown";
 import Link from "next/link";
+import axios from "axios";
 
 type MyAssetCardProps = {
   id: string;
@@ -67,6 +68,17 @@ export default function MyAssetCard({
     );
   };
 
+  // Handle delete
+  const onDelete = async () => {
+    try {
+      const response = await axios.delete(`/api/users/assets/${id}`);
+
+      window.location.reload();
+    } catch (error) {
+      throw new Error("Failed to delete asset");
+    }
+  };
+
   return (
     <div className="w-full flex flex-col gap-7">
       <div className="flex flex-col gap-3 py-6 border-b-2 border-[#222E3F] border-opacity-40 md:flex-row md:items-center md:gap-7">
@@ -116,7 +128,12 @@ export default function MyAssetCard({
               </button>
             </Link>
             {timeRemaining <= 0 ? (
-              ""
+              <button
+                onClick={() => onDelete()}
+                className="w-fit px-5 py-3 rounded-md bg-[#FF5959]"
+              >
+                Delete Asset
+              </button>
             ) : (
               <Link href={`/profile/myAssets/edit/${id}`}>
                 <button className="w-fit px-5 py-3 rounded-md bg-[#EAC066]">
