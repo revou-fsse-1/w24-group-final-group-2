@@ -12,11 +12,11 @@
   }
 
   .h1 {
-    @apply text-6xl font-bold;
+    @apply text-4xl font-bold;
   }
 
   .h2 {
-    @apply text-3xl font-bold;
+    @apply text-2xl font-bold;
   }
 
   .h3 {
@@ -26,11 +26,11 @@
 
 .home-background {
   background: linear-gradient(
-      0deg,
-      rgba(32, 61, 89, 0.8) 0%,
-      rgba(32, 61, 89, 0.8) 100%
+      45deg,
+      rgba(32, 61, 89, 0.9) 0%,
+      rgba(32, 61, 89, 0.7) 100%
     ),
-    url("/assets/bg-home.webp"), lightgray 50%;
+    url("/assets/bg-home.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
