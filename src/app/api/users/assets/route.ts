@@ -12,6 +12,11 @@ export async function GET() {
     },
     select: {
       assets: {
+        where: {
+          deletedAt: {
+            equals: null,
+          },
+        },
         select: {
           id: true,
           openingPrice: true,
