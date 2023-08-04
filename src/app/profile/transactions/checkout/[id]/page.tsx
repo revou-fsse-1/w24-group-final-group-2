@@ -38,10 +38,6 @@ export default function TransactionCheckout({
       });
   const { data, isLoading } = useSWR(`/api/users/bids/${params.id}`, fetchData);
 
-  if (!isLoading) {
-    console.log(data);
-  }
-
   // Handles the display of payment button
   const displayPaymentButton = () => {
     const missingDeliveryDetails =
@@ -110,10 +106,7 @@ export default function TransactionCheckout({
         statusPaid: "paid",
       });
 
-      console.log(response);
-      console.log("Payment Successful");
     } catch (error) {
-      console.log(error);
       throw new Error("Failed to create transaction");
     }
   };

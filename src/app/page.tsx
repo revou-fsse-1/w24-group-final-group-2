@@ -43,11 +43,11 @@ export default async function Home() {
         <section className="flex items-center justify-center w-full h-screen bg-no-repeat bg-cover home-background ">
           <div className="w-full max-w-7xl px-6 xl:px-0">
             <div className="w-full flex flex-col gap-2 lg:w-1/2">
-              <h1 className="h1 w- text-mkl-primary">WELCOME TO MARKILANG</h1>
-              <h2 className="font-normal h2 text-mkl-neutral">
+              <h1 className="h1 text-mkl-primary sm:text-5xl lg:text-7xl">WELCOME TO MARKILANG</h1>
+              <h2 className="font-normal h2 text-mkl-neutral sm:text-3xl lg:text-4xl">
                 Your Gateway to the World of Collectibles!
               </h2>
-              <p className="mt-8 text-mkl-neutral">
+              <p className="mt-8 text-mkl-neutral lg:text-lg">
                 Get ready for an exhilarating experience in the realm of
                 collectibles! At Markilang, we take pride in curating unique
                 auctions that bring together collectors and enthusiasts from all

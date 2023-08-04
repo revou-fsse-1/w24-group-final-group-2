@@ -37,6 +37,7 @@ export default function Header() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  // Handles search input
   const searchAuctionList = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const targetUrl = `/auctions?page=1&limit=10=&search=${searchInput}`;
     if (e.key == "Enter") {
@@ -44,6 +45,7 @@ export default function Header() {
     }
   };
 
+  // Handles login display
   const handleLoginDisplay = () => {
     return status == "loading" ? (
       <div className="flex items-center gap-3">
@@ -53,7 +55,10 @@ export default function Header() {
         <span className="flex items-center">.....</span>
       </div>
     ) : status == "unauthenticated" ? (
-      <Link href={"/login"}>
+      <Link
+        href={"/login"}
+        className="px-3 py-2 rounded-lg hover:bg-[#B2BAAB] hover:bg-opacity-60 transition-all"
+      >
         <button className="flex items-center gap-2 text-left">
           <div className="min-w-fit">
             <IconAvatar size={30} />
@@ -64,14 +69,16 @@ export default function Header() {
     ) : (
       <button
         onClick={() => setDisplayDropdownMenu((prev) => !prev)}
-        className="flex items-center gap-2 text-left min-w-fit"
+        className="min-w-fit flex items-center gap-2 text-left px-3 py-2 rounded-lg hover:bg-[#B2BAAB] hover:bg-opacity-60 transition-all"
       >
         <div className="flex items-center gap-2">
           <div className="min-w-fit">
             <IconAvatar size={30} />
           </div>
           <div>
-            <span className="font-bold">{session?.user?.name.split(" ")[0]}</span>
+            <span className="font-bold">
+              {session?.user?.name.split(" ")[0]}
+            </span>
           </div>
         </div>
         <div className={displayDropdownMenu ? "rotate-180" : "rotate-0"}>
@@ -90,7 +97,14 @@ export default function Header() {
         </Link>
 
         <div className="hidden w-1/3 md:flex md:relative">
-          <div className="absolute right-1 top-[3px] p-[7px] rounded-full hover:bg-gray-200">
+          <div
+            onClick={() =>
+              window.location.replace(
+                `/auctions?page=1&limit=10=&search=${searchInput}`
+              )
+            }
+            className="cursor-pointer absolute right-1 top-[3px] p-[7px] rounded-full hover:bg-gray-200"
+          >
             <IconSearch size={25} />
           </div>
           <input
@@ -104,11 +118,17 @@ export default function Header() {
         </div>
 
         <div className="hidden text-[#203C59] md:flex md:flex-col md:relative">
-          <div className="flex items-center gap-4 lg:gap-8">
-            <Link href={"/auctions"}>
+          <div className="flex items-center gap-1">
+            <Link
+              href={"/auctions"}
+              className="px-3 py-2 rounded-lg hover:bg-[#B2BAAB] hover:bg-opacity-60 transition-all"
+            >
               <button>Auctions</button>
             </Link>
-            <Link href={"/profile/registerAsset"}>
+            <Link
+              href={"/profile/registerAsset"}
+              className="px-3 py-2 rounded-lg hover:bg-[#B2BAAB] hover:bg-opacity-60 transition-all"
+            >
               <button>Register Asset</button>
             </Link>
             {handleLoginDisplay()}
@@ -121,28 +141,28 @@ export default function Header() {
               <Link
                 href={"/profile"}
                 onClick={() => setDisplayDropdownMenu(false)}
-                className="py-2 px-4 hover:bg-[#B2BAAB]"
+                className="py-2 px-4 hover:bg-[#B2BAAB] hover:bg-opacity-80 transition-all"
               >
                 <span>Profile</span>
               </Link>
               <Link
                 href={"/profile/myBids"}
                 onClick={() => setDisplayDropdownMenu(false)}
-                className="py-2 px-4 hover:bg-[#B2BAAB]"
+                className="py-2 px-4 hover:bg-[#B2BAAB] hover:bg-opacity-80 transition-all"
               >
                 <span>My Bids</span>
               </Link>
               <Link
                 href={"/profile/myAssets"}
                 onClick={() => setDisplayDropdownMenu(false)}
-                className="py-2 px-4 hover:bg-[#B2BAAB]"
+                className="py-2 px-4 hover:bg-[#B2BAAB] hover:bg-opacity-80 transition-all"
               >
                 <span>My Assets</span>
               </Link>
               <Link
                 href={"/profile/transactions"}
                 onClick={() => setDisplayDropdownMenu(false)}
-                className="py-2 px-4 hover:bg-[#B2BAAB]"
+                className="py-2 px-4 hover:bg-[#B2BAAB] hover:bg-opacity-80 transition-all"
               >
                 <span>Transactions</span>
               </Link>
@@ -155,7 +175,7 @@ export default function Header() {
                   signOut();
                   setDisplayDropdownMenu(false);
                 }}
-                className="py-2 px-4 text-rose-600 cursor-pointer hover:bg-[#B2BAAB]"
+                className="py-2 px-4 text-rose-600 cursor-pointer hover:bg-[#B2BAAB] hover:bg-opacity-80 transition-all"
               >
                 <span>Sign Out</span>
               </div>

@@ -5,6 +5,7 @@ import axios from "axios";
 import ItemCard from "@/components/ItemCard";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface IAsset {
   id: string;
@@ -17,7 +18,7 @@ interface IAsset {
 
 export default function AuctionList() {
   const [assets, setAssets] = useState<any>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [isInitLoad, setInitLoad] = useState(true);
 
@@ -25,13 +26,11 @@ export default function AuctionList() {
 
   async function loadMoreAssets() {
     setLoading(true);
-    console.log("loadMoreAssets");
     try {
       const res = await axios.get(
         `/api/assets?page=${page}&limit=10${search ? `&search=${search}` : ""}`
       );
 
-      console.log(res.data.assets);
       const newAssets: IAsset[] = res.data.assets;
       setAssets((prevAssets: any) => [...prevAssets, ...newAssets]);
       setPage((prevPage) => prevPage + 1);
@@ -62,10 +61,11 @@ export default function AuctionList() {
   }, []);
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col items-center justify-between">
       <Header />
-      <main className="flex flex-col items-center justify-center w-full">
-        <section className="container flex flex-col mx-5 md:mx-0">
+
+      <main className="w-full max-w-7xl flex grow flex-col items-center">
+        <section className="w-full flex flex-col mx-5 md:mx-0">
           <div className="mt-10 ml-10 md:ml-0">
             <h2 className="h2 text-mkl-secondary">
               {search ? `Searching for: ${search}` : `Auction List`}
@@ -94,7 +94,10 @@ export default function AuctionList() {
 
           <div className="flex justify-center my-10">
             {loading ? (
-              <p>Loading ...</p>
+              <div className="flex flex-col items-center gap-3">
+                <LoadingSpinner />
+                <span>Loading list ...</span>
+              </div>
             ) : (
               <button
                 onClick={() => loadMoreAssets()}
@@ -107,7 +110,8 @@ export default function AuctionList() {
           </div>
         </section>
       </main>
+
       <Footer />
-    </>
+    </div>
   );
 }

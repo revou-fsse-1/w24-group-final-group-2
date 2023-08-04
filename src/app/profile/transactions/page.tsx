@@ -26,10 +26,6 @@ export default function Transactions() {
       });
   const { data, isLoading } = useSWR("/api/users/transactions", fetchData);
 
-  if (!isLoading) {
-    console.log(data);
-  }
-
   const displayMyTransactions = () => {
     if (data.length == 0) {
       return (
