@@ -12,11 +12,13 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { indonesianCurrency } from "@/utils/Currency";
+import { useState } from "react";
 
 export default function AuctionPage() {
   const { data: session, status } = useSession();
   const params = useParams();
   const pathname = usePathname();
+  const [disableSubmit, setDisableSubmit] = useState(false);
 
   async function fetcher(url: string) {
     try {
@@ -82,22 +84,28 @@ export default function AuctionPage() {
   }
 
   async function onSubmit(data: any) {
-    const response = await axios.post(
-      "/api/bids",
-      {
-        bidAmount: data.bidValue,
-        currentPrice: 0,
-        assetId: params.id,
-        userId: session?.user.id,
-      },
-      {
-        headers: {
-          "Content-Type": "application/json",
+    try {
+      setDisableSubmit(true);
+      const response = await axios.post(
+        "/api/bids",
+        {
+          bidAmount: data.bidValue,
+          currentPrice: 0,
+          assetId: params.id,
+          userId: session?.user.id,
         },
-      }
-    );
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    window.location.replace(pathname);
+      window.location.replace(pathname);
+    } catch (error) {
+      setDisableSubmit(false);
+      throw new Error("Failed to place bid");
+    }
   }
 
   return (
@@ -131,12 +139,21 @@ export default function AuctionPage() {
                         className="w-full p-3 text-lg bg-mkl-neutral bg-opacity-30 rounded-xl border-2 border-gray-500 sm:w-2/3"
                       />
 
-                      <button
-                        className="w-full btn-primary sm:w-1/3 hover:btn-secondary"
-                        type="submit"
-                      >
-                        Place Bid
-                      </button>
+                      {disableSubmit ? (
+                        <button
+                          className="w-full btn-primary sm:w-1/3 opacity-40"
+                          disabled
+                        >
+                          Place Bid
+                        </button>
+                      ) : (
+                        <button
+                          className="w-full btn-primary sm:w-1/3 hover:btn-secondary"
+                          type="submit"
+                        >
+                          Place Bid
+                        </button>
+                      )}
                     </div>
                     <span className="mt-2 text-sm text-red-600">
                       {errors.bidValue?.message?.toString()}
