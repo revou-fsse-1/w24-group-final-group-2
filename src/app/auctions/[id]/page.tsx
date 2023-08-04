@@ -117,12 +117,12 @@ export default function AuctionPage() {
 			<Header />
 			<main className="flex flex-col items-center justify-center w-full">
 				<section className="container flex flex-col mx-5 mt-10 md:mx-0">
-					<div className="flex flex-row">
-						<div className="w-1/2">
+					<div className="flex flex-col md:flex-row">
+						<div className="w-full md:w-1/2">
 							<img src={`${data.imageUrl}`} alt="" />
 						</div>
 
-						<div className="flex flex-col w-1/2">
+						<div className="flex flex-col w-full px-5 md:w-1/2">
 							<div>
 								<div className={`${isSeller ? 'hidden' : ''} w-full`}>
 									<form
@@ -145,7 +145,7 @@ export default function AuctionPage() {
 													{...register('autoBidValue')}
 													type="input"
 													value={autoBidValue + 100000}
-													className="w-full pl-10 mr-5 text-xl bg-mkl-neutral rounded-xl max-h-[60px]"
+													className="w-full pl-10 mr-2 text-lg bg-mkl-neutral rounded-xl max-h-[60px]"
 												/>
 											) : (
 												<input
@@ -153,12 +153,12 @@ export default function AuctionPage() {
 													type="input"
 													placeholder="Please place your bid!"
 													defaultValue={defaultBidInputValue + 100000}
-													className="w-full pl-10 mr-5 text-xl bg-mkl-neutral rounded-xl max-h-[60px]"
+													className="w-full pl-10 mr-2 text-lg bg-mkl-neutral rounded-xl max-h-[60px]"
 												/>
 											)}
 
 											<button
-												className="max-h-[60px] w-1/3 btn-primary"
+												className="max-h-[60px] w-8/12  md:w-10/12 lg:w-7/12 btn-primary"
 												type="submit"
 											>
 												Place Bid!
@@ -193,7 +193,7 @@ export default function AuctionPage() {
 							</div>
 						</div>
 					</div>
-					<div className="px-20 mt-10">
+					<div className="px-5 mt-10 md:px-20">
 						<h2 className="h2">{data.name}</h2>
 						<h3 className="mt-3 h3">
 							{indonesianCurrency.format(data.openingPrice)}
